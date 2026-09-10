@@ -101,11 +101,24 @@ GitHub Actions（毎朝5:00 JST）
 数分後、`https://<ユーザー名>.github.io/<リポジトリ名>/` で公開されます。
 
 > **ブランチ名について**
-> このリポジトリは空の状態から作られたため、最初に push された
-> `claude/education-news-automation-8kzu9s` がデフォルトブランチになっています。
-> `main` という名前にしたい場合は、**Settings → General → Default branch** の
-> 鉛筆アイコンからリネームしてください。ワークフローの cron はデフォルトブランチ上でのみ
-> 実行されるため、Pages の公開元もデフォルトブランチに合わせるのが確実です。
+> ブランチ名は何でも構いません（`main` でも `hp` でも動作は同じです）。
+> 重要なのは次の2点だけです。
+>
+> - scheduled workflow（cron）は**デフォルトブランチ上の定義だけ**が実行される
+> - GitHub Pages の公開元も**デフォルトブランチ**に合わせる
+>
+> つまり「デフォルトブランチ = Pages の公開元」になっていれば正しく動きます。
+> 名前を変えたい場合は **Settings → General → Default branch** の鉛筆アイコンから
+> いつでもリネームできます。GitHub が古い名前へのリンクを自動でリダイレクトし、
+> Actions・Pages の設定も追従するため、コミット履歴が失われることはありません。
+> 手元に clone がある場合だけ、リネーム後に次を実行してください。
+>
+> ```bash
+> git branch -m <古い名前> <新しい名前>
+> git fetch origin
+> git branch -u origin/<新しい名前> <新しい名前>
+> git remote set-head origin -a
+> ```
 
 > **公開範囲について**
 > このリポジトリは public です。GitHub Pages で公開したサイトは誰でも閲覧できます。
