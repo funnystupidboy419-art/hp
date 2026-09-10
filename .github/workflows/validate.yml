@@ -1,0 +1,66 @@
+# push / pull request のたびに、サイトとスクリプトが壊れていないか確認する。
+# API キーは使わない（ネットワークアクセスなしで完結するチェックのみ）。
+name: Validate Site
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: データとHTMLの検証
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 検証用の依存関係をインストール
+        run: pip install pyyaml
+
+      - name: オフラインテスト
+        run: python scripts/test_update_news.py
+
+      - name: データとHTMLの検証
+        run: python scripts/validate_site.py
+
+      - name: ワークフロー定義の構文チェック
+        run: |
+          python - <<'PY'
+          import glob, sys, yaml
+          ok = True
+          for path in sorted(glob.glob(".github/workflows/*.yml")):
+              try:
+                  doc = yaml.safe_load(open(path, encoding="utf-8"))
+              except Exception as exc:
+                  print(f"[ERROR] {path}: {exc}")
+                  ok = False
+                  continue
+              # YAML 1.1 では `on:` が真偽値 True として解釈される
+              triggers = doc.get("on", doc.get(True))
+              print(f"[ok] {path}: jobs={list(doc.get('jobs', {}))} triggers={list(triggers or {})}")
+          sys.exit(0 if ok else 1)
+          PY
+
+      - name: cron が日本時間5:00になっているか確認
+        run: |
+          python - <<'PY'
+          import sys, yaml
+          doc = yaml.safe_load(open(".github/workflows/daily-education-news.yml", encoding="utf-8"))
+          triggers = doc.get("on", doc.get(True))
+          crons = [s["cron"] for s in triggers["schedule"]]
+          # 05:00 JST (UTC+9) = 20:00 UTC
+          expected = "0 20 * * *"
+          if expected not in crons:
+              print(f"[ERROR] cron が {expected}（=日本時間5:00）ではありません: {crons}")
+              sys.exit(1)
+          print(f"[ok] cron={crons} は日本時間 05:00 に相当します")
+          PY

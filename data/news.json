@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "title": "教育時事アーカイブ",
+    "description": "教員が教育について考えるための教育ニュースデータベース",
+    "last_updated": null,
+    "generator": "scripts/update_news.py",
+    "timezone": "Asia/Tokyo"
+  },
+  "categories": [
+    { "id": "policy",        "label": "教育政策" },
+    { "id": "curriculum",    "label": "学習指導要領" },
+    { "id": "futoko",        "label": "不登校" },
+    { "id": "ijime",         "label": "いじめ" },
+    { "id": "childrights",   "label": "子どもの権利" },
+    { "id": "teachershort",  "label": "教員不足" },
+    { "id": "workstyle",     "label": "教員の働き方" },
+    { "id": "ai",            "label": "AIと教育" },
+    { "id": "ict",           "label": "ICT教育" },
+    { "id": "lesson",        "label": "授業改善" },
+    { "id": "classroom",     "label": "学級経営" },
+    { "id": "guidance",      "label": "生徒指導" },
+    { "id": "sen",           "label": "特別支援教育" },
+    { "id": "achievement",   "label": "学力" },
+    { "id": "equity",        "label": "教育格差" },
+    { "id": "admission",     "label": "入試制度" },
+    { "id": "schoolsystem",  "label": "学校制度" },
+    { "id": "other",         "label": "その他" }
+  ],
+  "entries": []
+}

@@ -1,0 +1,176 @@
+# 毎朝 5:00（日本時間）に教育ニュースを収集し、data/news.json を更新する。
+#
+# GitHub Actions の cron は UTC で解釈されるため、
+#   05:00 JST (UTC+9) = 前日 20:00 UTC  ->  '0 20 * * *'
+# を指定している。
+#
+# 注意: GitHub の scheduled workflow は混雑時に数分〜十数分遅れて起動することがある。
+#       これは GitHub 側の仕様で、こちらでは制御できない。
+name: Daily Education News
+
+on:
+  schedule:
+    # ┌ 分  ┌ 時(UTC)  ┌ 日  ┌ 月  ┌ 曜日
+    - cron: '0 20 * * *'   # = 日本時間 翌日 05:00
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '保存せずに結果だけ確認する'
+        type: boolean
+        default: false
+      max_items:
+        description: '追加する最大件数'
+        type: string
+        default: '5'
+      lookback_days:
+        description: '何日前までのニュースを対象にするか'
+        type: string
+        default: '3'
+
+# data/news.json をコミットするために書き込み権限が必要
+permissions:
+  contents: write
+
+# 同時に走って push が衝突しないようにする
+concurrency:
+  group: daily-education-news
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: 教育ニュースを収集して更新
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: リポジトリを取得
+        uses: actions/checkout@v4
+
+      - name: Python をセットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: 依存関係をインストール
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: APIキーが設定されているか確認
+        env:
+          # 値そのものは絶対に echo しない。長さだけを見て有無を判定する。
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "${ANTHROPIC_API_KEY}" ]; then
+            echo "::error title=Secret 未設定::リポジトリの Settings > Secrets and variables > Actions で ANTHROPIC_API_KEY を登録してください。"
+            exit 1
+          fi
+          echo "ANTHROPIC_API_KEY は設定されています（値は表示しません）"
+
+      - name: オフラインテスト（サニタイズ・重複排除・マージ）
+        run: |
+          echo "::group::unittest"
+          python scripts/test_update_news.py
+          echo "::endgroup::"
+
+      - name: 更新前の状態を検証
+        run: |
+          echo "::group::validate (before)"
+          python scripts/validate_site.py
+          echo "::endgroup::"
+
+      - name: 更新前のデータをバックアップ
+        run: |
+          cp data/news.json "${RUNNER_TEMP}/news.json.bak"
+          echo "バックアップ: ${RUNNER_TEMP}/news.json.bak"
+          echo "（Git の履歴からも常に復元できます）"
+
+      - name: ニュースを収集して data/news.json を更新
+        id: update
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NEWS_MAX_ITEMS: ${{ inputs.max_items || '5' }}
+          NEWS_LOOKBACK_DAYS: ${{ inputs.lookback_days || '3' }}
+        run: |
+          echo "::group::update_news.py"
+          EXTRA=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            EXTRA="--dry-run"
+            echo "::notice title=dry-run::保存は行いません"
+          fi
+          python scripts/update_news.py \
+            --max-items "${NEWS_MAX_ITEMS}" \
+            --lookback-days "${NEWS_LOOKBACK_DAYS}" \
+            ${EXTRA}
+          echo "::endgroup::"
+
+      - name: 更新後のデータとHTMLを検証（壊れていたら復元）
+        run: |
+          echo "::group::validate (after)"
+          if ! python scripts/validate_site.py; then
+            echo "::error title=検証失敗::更新後のデータが不正です。バックアップから復元して中止します。"
+            cp "${RUNNER_TEMP}/news.json.bak" data/news.json
+            git checkout -- data/news.json || true
+            exit 1
+          fi
+          echo "::endgroup::"
+
+      - name: 変更をコミットして push
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          if git diff --quiet -- data/news.json; then
+            echo "::notice title=変更なし::新しく追加されたニュースはありませんでした。コミットは行いません。"
+            exit 0
+          fi
+
+          COUNT=$(python -c "import json;print(len(json.load(open('data/news.json'))['entries']))")
+          TODAY=$(TZ=Asia/Tokyo date '+%Y-%m-%d')
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/news.json
+          git commit -m "教育時事を更新: ${TODAY}（収録 ${COUNT} 件）"
+
+          for attempt in 1 2 3 4; do
+            if git push; then
+              echo "push 成功"
+              exit 0
+            fi
+            echo "push に失敗しました。リベースして再試行します（${attempt}/4）"
+            git pull --rebase origin "${GITHUB_REF_NAME}" || true
+            sleep $((2 ** attempt))
+          done
+          echo "::error title=push 失敗::4回試行しましたが push できませんでした。"
+          exit 1
+
+      - name: 実行結果のサマリー
+        if: always()
+        run: |
+          {
+            echo "## 教育時事アーカイブ 更新結果"
+            echo ""
+            echo "- 実行時刻（JST）: $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M')"
+            if [ -f data/news.json ]; then
+              python - <<'PY'
+          import json
+          doc = json.load(open("data/news.json"))
+          entries = doc.get("entries", [])
+          meta = doc.get("meta", {})
+          print(f"- 最終更新: {meta.get('last_updated')}")
+          print(f"- 収録件数: {len(entries)}")
+          latest = [e for e in entries if e.get("collected_date") == meta.get("last_updated")]
+          if latest:
+              print("")
+              print("### 今回の記事")
+              for e in latest:
+                  print(f"- {e.get('title')}")
+          PY
+            fi
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: 失敗時の案内
+        if: failure()
+        run: |
+          echo "::error title=更新に失敗しました::data/news.json は変更されていないか、バックアップから復元されています。公開中のサイトは以前の内容のまま維持されます。上のログを確認してください。"
