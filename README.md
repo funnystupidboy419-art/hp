@@ -96,9 +96,21 @@ GitHub Actions（毎朝5:00 JST）
 **Settings → Pages** で次を設定します。
 
 - **Source**: `Deploy from a branch`
-- **Branch**: `main` / `/ (root)`
+- **Branch**: **デフォルトブランチ** / `/ (root)`
 
 数分後、`https://<ユーザー名>.github.io/<リポジトリ名>/` で公開されます。
+
+> **ブランチ名について**
+> このリポジトリは空の状態から作られたため、最初に push された
+> `claude/education-news-automation-8kzu9s` がデフォルトブランチになっています。
+> `main` という名前にしたい場合は、**Settings → General → Default branch** の
+> 鉛筆アイコンからリネームしてください。ワークフローの cron はデフォルトブランチ上でのみ
+> 実行されるため、Pages の公開元もデフォルトブランチに合わせるのが確実です。
+
+> **公開範囲について**
+> このリポジトリは public です。GitHub Pages で公開したサイトは誰でも閲覧できます。
+> 限定公開にしたい場合は、リポジトリを private にしたうえで
+> GitHub Pages の非公開設定（有料プランが必要）をご確認ください。
 
 ### 4. 動作確認（初回実行）
 
@@ -154,6 +166,9 @@ python -m http.server 8000   # → http://localhost:8000/
 | 10 | 更新後の検証（データ＋HTML＋秘密情報） | **バックアップから復元**して中止 |
 | 11 | commit / push（変更がなければコミットしない） | 4回までリトライ |
 | 12 | GitHub Pages が自動で再公開 | — |
+
+> scheduled workflow は**デフォルトブランチ上のワークフロー定義**だけが実行されます。
+> 別ブランチで cron を書き換えても、マージするまで反映されません。
 
 > GitHub の scheduled workflow は、混雑時に数分〜十数分ほど遅れて起動することがあります（GitHub 側の仕様）。
 > 確実に特定時刻に実行したい場合は、手動実行または外部のスケジューラからの `workflow_dispatch` を検討してください。
