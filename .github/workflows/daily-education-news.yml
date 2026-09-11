@@ -58,16 +58,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r scripts/requirements.txt
 
-      - name: APIキーが設定されているか確認
-        env:
-          # 値そのものは絶対に echo しない。長さだけを見て有無を判定する。
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: RSS フィード から教育ニュースを取得
         run: |
-          if [ -z "${ANTHROPIC_API_KEY}" ]; then
-            echo "::error title=Secret 未設定::リポジトリの Settings > Secrets and variables > Actions で ANTHROPIC_API_KEY を登録してください。"
-            exit 1
-          fi
-          echo "ANTHROPIC_API_KEY は設定されています（値は表示しません）"
+          echo "::group::fetch_rss_news.py"
+          python scripts/fetch_rss_news.py \
+            --lookback-days "${{ inputs.lookback_days || '3' }}" \
+            --max-items "${{ inputs.max_items || '5' }}" \
+            --output "${RUNNER_TEMP}/rss_items.json"
+          echo "取得完了:"
+          python -c "import json; print(f\"  件数: {len(json.load(open('${RUNNER_TEMP}/rss_items.json'))['items'])}\")"
+          echo "::endgroup::"
 
       - name: オフラインテスト（サニタイズ・重複排除・マージ）
         run: |
@@ -87,12 +87,8 @@ jobs:
           echo "バックアップ: ${RUNNER_TEMP}/news.json.bak"
           echo "（Git の履歴からも常に復元できます）"
 
-      - name: ニュースを収集して data/news.json を更新
+      - name: RSS から取得したニュースを data/news.json に取り込む
         id: update
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          NEWS_MAX_ITEMS: ${{ inputs.max_items || '5' }}
-          NEWS_LOOKBACK_DAYS: ${{ inputs.lookback_days || '3' }}
         run: |
           echo "::group::update_news.py"
           EXTRA=""
@@ -101,8 +97,7 @@ jobs:
             echo "::notice title=dry-run::保存は行いません"
           fi
           python scripts/update_news.py \
-            --max-items "${NEWS_MAX_ITEMS}" \
-            --lookback-days "${NEWS_LOOKBACK_DAYS}" \
+            --input-json "${RUNNER_TEMP}/rss_items.json" \
             ${EXTRA}
           echo "::endgroup::"
 
