@@ -47,8 +47,9 @@ except ImportError:
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 # RSS フィード URL（文部科学省の公式フィード）
+# 注: https://www.mext.go.jp/rss.html は一覧ページ。実際のフィード URL は以下。
 RSS_FEEDS = {
-    "文部科学省": "https://www.mext.go.jp/rss.html",
+    "文部科学省 新着情報": "https://www.mext.go.jp/rss.xml",
 }
 
 # カテゴリーマッピング（キーワード → category ID）
