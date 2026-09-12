@@ -60,6 +60,55 @@ DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SECRET_RE = re.compile(r"sk-" + r"ant-" + r"[A-Za-z0-9_\-]{12,}")
 SCAN_SUFFIXES = {".py", ".js", ".html", ".css", ".json", ".yml", ".yaml", ".md", ".txt"}
 
+# --------------------------------------------------------------------------
+# 個人情報の検出
+#
+# 検査するのは「公開される中身」だけ（data/news.json・index.html・assets/）。
+# スクリプトや CLAUDE.md まで見ると、この検出パターン自体を拾ってしまう。
+#
+# ERROR = 誤検出がまず起きない形（連絡先）。出たら push しない。
+# WARN  = 手がかりであって断定ではない形。出たら人間が中身を見て判断する。
+#         --strict を付けると警告もエラー扱いになる。
+# --------------------------------------------------------------------------
+PUBLISHED_FILES = ["data/news.json", "index.html"]
+PUBLISHED_DIRS = ["assets"]
+
+PERSONAL_ERROR_PATTERNS = [
+    (
+        re.compile(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}"),
+        "メールアドレスらしき文字列",
+    ),
+    (
+        re.compile(r"0\d{1,4}-\d{1,4}-\d{4}"),
+        "電話番号らしき文字列",
+    ),
+]
+
+# 「〜さん」の前に来ても人名とは限らない語
+HONORIFIC_STOPWORDS = {
+    "皆", "みな", "みなさ", "お子", "生徒", "児童", "学生", "先生", "保護者",
+    "担任", "教員", "職員", "校長", "教頭", "本人", "当事者", "利用者",
+}
+
+PERSONAL_WARN_PATTERNS = [
+    (
+        re.compile(r"[0-9０-９一二三四五六七八九]{1,2}\s*年\s*[0-9０-９一二三四五六七八九]{1,2}\s*組"),
+        "学級が特定される表記（◯年◯組）",
+    ),
+    (
+        re.compile(r"(?:児童|生徒|園児)\s*[A-ZＡ-Ｚ](?![A-Za-zＡ-Ｚａ-ｚ])"),
+        "個人を指す記号（児童A など）",
+    ),
+    (
+        re.compile(r"([一-龥]{2,4})\s*(?:さん|くん|君|ちゃん)"),
+        "人名＋敬称らしき表記",
+    ),
+    (
+        re.compile(r"(?<!\d)\d{12}(?!\d)"),
+        "12桁の数字（個人番号の桁数）",
+    ),
+]
+
 
 class Problems:
     def __init__(self) -> None:
@@ -335,6 +384,55 @@ def check_secrets(root: Path, problems: Problems) -> None:
 
 
 # --------------------------------------------------------------------------
+# 個人情報
+# --------------------------------------------------------------------------
+
+
+def iter_published_files(root: Path) -> List[Path]:
+    """公開される中身のファイルだけを返す。"""
+    paths: List[Path] = []
+    for name in PUBLISHED_FILES:
+        path = root / name
+        if path.is_file():
+            paths.append(path)
+    for name in PUBLISHED_DIRS:
+        directory = root / name
+        if not directory.is_dir():
+            continue
+        for path in sorted(directory.rglob("*")):
+            if path.is_file() and path.suffix.lower() in SCAN_SUFFIXES:
+                paths.append(path)
+    return paths
+
+
+def check_personal_info(root: Path, problems: Problems) -> None:
+    for path in iter_published_files(root):
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        rel = path.relative_to(root)
+
+        for pattern, label in PERSONAL_ERROR_PATTERNS:
+            match = pattern.search(text)
+            if match:
+                problems.error(
+                    f"{rel}: {label}が含まれています（{match.group(0)}）。"
+                    "個人が特定される情報は公開しないでください。"
+                )
+
+        for pattern, label in PERSONAL_WARN_PATTERNS:
+            for match in pattern.finditer(text):
+                if pattern.groups and match.group(1) in HONORIFIC_STOPWORDS:
+                    continue
+                problems.warn(
+                    f"{rel}: {label}が見つかりました（{match.group(0)}）。"
+                    "個人が特定されないか確認してください。"
+                )
+                break
+
+
+# --------------------------------------------------------------------------
 # main
 # --------------------------------------------------------------------------
 
@@ -353,6 +451,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     doc = check_data(root, problems)
     check_html(root, problems)
     check_secrets(root, problems)
+    check_personal_info(root, problems)
 
     entries = doc.get("entries", []) if isinstance(doc, dict) else []
     print(f"[validate] 記事数: {len(entries)}")

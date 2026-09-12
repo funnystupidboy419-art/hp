@@ -11,6 +11,11 @@
 3. **過去記事を消さない。** 追記のみ。
 4. **push 前に必ず `python scripts/validate_site.py` を通す。** 失敗したら push しない。
 5. **児童生徒・保護者・個々の教職員など、個人が特定される情報は書かない。**
+   `scripts/validate_site.py` が連絡先の形（メール・電話）をエラーで止め、
+   学級名や人名らしき表記を警告で知らせる。警告が出たら中身を見て判断する。
+6. **push した内容は全世界に公開され、取り消せない。**
+   公開 URL は誰でも見られる。コミットを後から消しても Git 履歴には残る。
+   `git diff` で**中身を読んでから** commit する。ファイル名だけの確認では足りない。
 
 ---
 
@@ -119,8 +124,10 @@ python3 scripts/update_news.py --input-json /tmp/items.json
 # 検証（ここが通らなければ push しない）
 python3 scripts/validate_site.py
 
-# 差分を確認してから
-git diff --stat
+# 差分の中身を必ず読む（--stat はファイル名と行数しか出ないので不可）
+git diff
+
+# 個人が特定される記述がないことを目で確認してから
 git add data/news.json
 git commit -m "教育時事を更新: $(TZ=Asia/Tokyo date +%Y-%m-%d)"
 git push origin main
@@ -131,6 +138,13 @@ git push origin main
 - `重複のため見送り` → 既出。正常な動作
 - `出典 URL が不正なため除外` → その URL は捨てられた
 - `追加できる新しいニュースはありませんでした` → **正常終了**。この日は何もしなくてよい
+
+`validate_site.py` の出力の読み方:
+
+- `[ERROR]` → **push しない。** 個人情報や API キーらしき文字列を検出している
+- `[warn ]` → 自動では止めない。学級名・人名らしき表記なので、**該当箇所を自分で読んで**
+  問題なければ進む。判断に迷うなら記事から落とす
+- 警告もすべて止めたいときは `python3 scripts/validate_site.py --strict`
 
 **エラーが出たら push しない。** `data/news.json` は書き換わっていないので、サイトは前日のまま維持される。
 
@@ -153,3 +167,13 @@ python3 -m http.server 8000            # ローカル表示 http://localhost:800
   Claude Code の定期実行で運用している間は不要だが、将来の切り替え用に残してある。
 - `.github/workflows/validate.yml` は push/PR ごとに走る検証。API キー不要。
 - ブランチは `main` のみ。GitHub Pages は `main` / root から公開している。
+
+## 情報漏洩を防ぐための設定ファイル
+
+- `.claudeignore` … AI に読ませないパスの宣言。名簿・成績・所見などを置きうる名前、
+  `.env` や鍵ファイル、校務で使う表計算・文書ファイル一式を除外している。
+  「そもそもここに置かない」運用と二重にするための保険。
+- `.claude/settings.json` … 許可コマンドと禁止操作。毎朝の更新に必要なコマンドだけを
+  allow に並べ、`rm -rf`・`git push --force`・`git reset --hard` など
+  取り返しのつかない操作を deny にしている（絶対ルール3「過去記事を消さない」の裏付け）。
+  それ以外のコマンドは禁止ではなく、都度確認になる。
