@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && python3 scripts/validate_site.py >&2 || exit 2",
+            "timeout": 60,
+            "statusMessage": "サイトを検証しています"
+          }
+        ]
+      }
+    ]
+  }
+}
