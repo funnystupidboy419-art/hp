@@ -84,6 +84,8 @@ body.teacher .rz .ans{display:block}
 body.teacher .rz{border-color:var(--accent-soft)}
 
 /* ---- 誤答提示 ---- */
+.badproof{border:1px solid var(--rule); background:var(--surface); margin:6px 0; padding:6px 9px; font-size:11.5px; line-height:1.6}
+.badproof .ind{padding-left:1.1em}
 .bad{border:1px solid var(--rule); margin-top:5px; padding:6px 8px; font-size:11.5px}
 .bad ol{margin:0; padding:0; list-style:none; counter-reset:ln; display:block}
 .bk .bad ol{counter-reset:ln}

@@ -10,6 +10,10 @@
 - カード番号 ……… ①〜⑩（4章）／⑪〜㉓（5章）
 番号の体系どうしがぶつかると、解答の「①②③より」がカード番号と読めてしまう。
 
+時間配分は既定で ①5 ②5 ③20 ④12 ⑤8（合計50分）。
+教師主導の回など配分を変えるときは sheet["mins"] で上書きする（合計50分を検査する）。
+ブロック名を変えるときは sheet["names"]。
+
 宿題・削り順・ねらいの運用メモは、⑤ の tonly（赤刷りのみ）に置く。
 生徒に見せる注意書きだけ .hw を使う。
 
@@ -204,8 +208,11 @@ _NAMES = ["前時の復習", "今日やること", "練習", "JUMP課題", "ふ�
 _MINS = [5, 5, 20, 12, 8]
 
 def build(sheet, out_path):
+    mins = sheet.get("mins", _MINS)
+    assert sum(mins) == 50, "5ブロックの合計が50分になっていません: %s" % (mins,)
+    names = sheet.get("names", _NAMES)
     blocks = "".join(
-        _BLOCK.format(n="①②③④⑤"[i], name=_NAMES[i], min=_MINS[i], body=sheet["blocks"][i])
+        _BLOCK.format(n="①②③④⑤"[i], name=names[i], min=mins[i], body=sheet["blocks"][i])
         for i in range(5))
     cards = "\n".join('    <li><i>%s</i>%s</li>' % (c[0], c[1]) for c in sheet["cards"])
     html = _TPL.format(css=_css(), blocks=blocks, cards=cards, **{
