@@ -59,6 +59,10 @@ body.teacher .tonly{display:block}
 .bk{border:1px solid var(--rule); background:var(--surface); padding:9px 10px; display:flex; flex-direction:column; min-width:0}
 .bk>h2{font-family:var(--serif); font-size:14px; font-weight:700; margin:0 0 2px; display:flex; align-items:baseline; gap:6px; flex-wrap:wrap}
 .bk>h2 .n{background:var(--ink); color:var(--surface); font-family:var(--sans); font-size:11px; font-weight:700; padding:1px 6px; flex:none}
+.bk>h2.plain{display:block; font-family:var(--serif); font-size:14px; border-bottom:2px solid var(--ink); padding-bottom:2px}
+.blocks.practice{grid-template-columns:1fr}
+@media (min-width:660px){ .blocks.practice{grid-template-columns:1fr 1fr} }
+@media (min-width:1120px){ .blocks.practice{grid-template-columns:repeat(4,1fr)} }
 .bk>h2 .min{font-family:var(--sans); font-size:11px; color:var(--graphite); font-weight:500; margin-left:auto}
 .bk .mv{display:none; font-size:10px; letter-spacing:.06em; color:var(--accent); border:1px solid var(--accent); padding:0 4px; font-weight:700}
 .bk p{margin:5px 0 0}
@@ -152,6 +156,8 @@ footer{margin-top:18px; padding-top:8px; border-top:1px solid var(--rule); font-
   html,body{height:100%}
   .wrap{display:flex; flex-direction:column; height:100%}
   .blocks{grid-template-columns:3.6fr 4.4fr 7.4fr 7.28fr; gap:7px; flex:1 1 auto; align-content:stretch}
+  .blocks.practice{grid-template-columns:repeat(4,1fr)}
+  .bk>h2.plain{font-size:10.5pt}
   .bk{min-height:0}
   .bk{break-inside:avoid; padding:7px 8px}
   .bk>h2 .n{background:#000; color:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}

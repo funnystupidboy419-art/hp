@@ -8,6 +8,8 @@
 - ことがらの見出し … ア イ ウ
 - JUMP の小問 ……… ol.circ（①②）
 - カード番号 ……… ①〜⑩（4章）／⑪〜㉓（5章）
+- 証明の根拠 ……… <b>内容をことばで書いてから（根拠○）</b>。番号だけ書かない。
+  「カード③から」では、いちいち別紙を見ないと何の条件か分からない。
 番号の体系どうしがぶつかると、解答の「①②③より」がカード番号と読めてしまう。
 
 根拠カードは別紙（cards.py で作る）。紙面にはその回のカードを1行で書くだけ。
@@ -221,6 +223,28 @@ _BLOCK = """  <section class="bk">
 
 _NAMES = ["前時の復習", "今日やること", "練習", "JUMP課題"]
 _MINS = [5, 5, 20, 15]
+
+_BLOCK_P = """  <section class="bk">
+    <h2 class="plain">{name}</h2>
+{body}
+  </section>
+"""
+
+
+def build_practice(sheet, out_path):
+    """確かめよう・演習用。①②③④のステップにせず、問題を並べるだけの紙面。
+
+    sheet["cols"] は (見出し, 本文HTML) のリスト。4列を想定。
+    """
+    blocks = "".join(_BLOCK_P.format(name=h, body=b) for h, b in sheet["cols"])
+    html = _TPL.format(css=_css(), blocks=blocks, **{
+        k: sheet[k] for k in
+        ("title", "ji", "pg", "goal", "katari", "cards_title", "cards_hint", "footer")})
+    html = html.replace('<div class="blocks">', '<div class="blocks practice">')
+    with io.open(out_path, "w", encoding="utf-8") as f:
+        f.write(html)
+    return len(html.encode("utf-8"))
+
 
 def build(sheet, out_path):
     mins = sheet.get("mins", _MINS)
