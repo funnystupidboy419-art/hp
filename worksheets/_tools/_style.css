@@ -162,6 +162,7 @@ footer{margin-top:18px; padding-top:8px; border-top:1px solid var(--rule); font-
   .bk{break-inside:avoid; padding:7px 8px}
   .bk>h2 .n{background:#000; color:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}
   figure svg{max-width:132px}
+  figure.big svg{max-width:none}
   .rz .ln{height:17px}
 
   /* A3を5段に割ると1段は約80mm。画面用の固定幅のままだと答え欄が段幅を食いつぶし、
@@ -194,6 +195,7 @@ footer{margin-top:18px; padding-top:8px; border-top:1px solid var(--rule); font-
   body.teacher{font-size:8.4pt}
   body.teacher .rz .ans{font-size:7.8pt; line-height:1.38; padding:4px 6px}
   body.teacher figure svg{max-width:116px}
+  body.teacher figure.big svg{max-width:none}
   body.teacher .bk{padding:6px 7px}
   body.teacher .bk ol{gap:5px}
   body.teacher .bk>h2{font-size:9.8pt}
