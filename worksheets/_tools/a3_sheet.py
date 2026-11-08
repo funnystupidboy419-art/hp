@@ -108,6 +108,23 @@ def tick(P, Q, n=1, L=4.5, gap=3.0, cls="m"):
                    % (cls, cx-per[0]*L, cy-per[1]*L, cx+per[0]*L, cy+per[1]*L))
     return "".join(out)
 
+def par(P, Q, n=1, L=4.5, gap=4.0, cls="m"):
+    """線分 PQ の中点に、平行を示す矢じりを n 個描く。"""
+    u = _u((Q[0]-P[0], Q[1]-P[1]))
+    per = (u[1], -u[0])
+    mx, my = (P[0]+Q[0])/2.0, (P[1]+Q[1])/2.0
+    out = []
+    for i in range(n):
+        off = (i - (n-1)/2.0) * gap
+        cx, cy = mx + u[0]*off, my + u[1]*off
+        a = (cx - u[0]*L + per[0]*L, cy - u[1]*L + per[1]*L)
+        b = (cx, cy)
+        c = (cx - u[0]*L - per[0]*L, cy - u[1]*L - per[1]*L)
+        out.append('<polyline class="%s" points="%.1f,%.1f %.1f,%.1f %.1f,%.1f"/>'
+                   % (cls, a[0], a[1], b[0], b[1], c[0], c[1]))
+    return "".join(out)
+
+
 def right_angle(V, P1, P2, s=8, cls="a"):
     """頂点 V の直角記号。V→P1 と V→P2 の方向に一辺 s の L 字を描く。"""
     u1 = _u((P1[0]-V[0], P1[1]-V[1])); u2 = _u((P2[0]-V[0], P2[1]-V[1]))
