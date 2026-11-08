@@ -53,9 +53,9 @@ body.teacher .tonly{display:block}
 .cards li i{font-style:normal; color:var(--accent); font-weight:700}
 
 /* ---- 5 blocks ---- */
-.blocks{display:grid; gap:12px; margin-top:16px; grid-template-columns:1fr}
+.blocks{display:grid; gap:12px; margin-top:14px; grid-template-columns:1fr}
 @media (min-width:660px){ .blocks{grid-template-columns:1fr 1fr} }
-@media (min-width:1120px){ .blocks{grid-template-columns:3.6fr 4.4fr 5.6fr 5.48fr 3.6fr} }
+@media (min-width:1120px){ .blocks{grid-template-columns:3.6fr 4.4fr 7.4fr 7.28fr} }
 .bk{border:1px solid var(--rule); background:var(--surface); padding:9px 10px; display:flex; flex-direction:column; min-width:0}
 .bk>h2{font-family:var(--serif); font-size:14px; font-weight:700; margin:0 0 2px; display:flex; align-items:baseline; gap:6px; flex-wrap:wrap}
 .bk>h2 .n{background:var(--ink); color:var(--surface); font-family:var(--sans); font-size:11px; font-weight:700; padding:1px 6px; flex:none}
@@ -123,15 +123,21 @@ svg .gm{fill:none; stroke:var(--rule); stroke-width:1.4}
 .figs{display:flex; flex-wrap:wrap; gap:10px; margin:6px 0 0}
 .figs>figure{flex:1 1 110px; min-width:0}
 
-.codebox{display:flex; gap:5px; margin:6px 0 0}
-.codebox span{flex:0 0 26px; height:32px; border:1px solid var(--rule); background:var(--surface);
+.codebox{display:flex; gap:4px; align-items:center}
+.codebox b{font-size:10.5px; font-weight:500; color:var(--graphite); white-space:nowrap; margin-right:2px}
+.codebox span{flex:0 0 20px; height:24px; border:1px solid var(--rule); background:var(--surface);
   border-radius:2px; display:block}
+/* 罫線なしの記述欄。JUMP のように行数が読めないところで使う。 */
+.bz{border:1px solid var(--rule); background:var(--surface); margin-top:5px}
+.bz .ans{display:none; margin:0; padding:6px 8px; color:var(--accent); font-size:12px; line-height:1.6}
+body.teacher .bz .ans{display:block}
+body.teacher .bz{border-color:var(--accent-soft)}
 .hw{font-size:11px; color:var(--accent); border-top:1px dotted var(--rule); margin-top:8px; padding-top:4px}
 .spacer{flex:1; min-height:4px}
 footer{margin-top:18px; padding-top:8px; border-top:1px solid var(--rule); font-size:11px; color:var(--graphite);
   display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px}
 
-@page{size:A3 landscape; margin:10mm}
+@page{size:A3 landscape; margin:8mm}
 @media print{
   :root,:root[data-theme]{
     --paper:#fff; --surface:#fff; --ink:#000; --graphite:#555;
@@ -143,7 +149,10 @@ footer{margin-top:18px; padding-top:8px; border-top:1px solid var(--rule); font-
   body.teacher .bad li:nth-child(3){-webkit-print-color-adjust:exact; print-color-adjust:exact}
   .wrap{max-width:none; padding:0}
   .bar{display:none}
-  .blocks{grid-template-columns:3.6fr 4.4fr 5.6fr 5.48fr 3.6fr; gap:7px}
+  html,body{height:100%}
+  .wrap{display:flex; flex-direction:column; height:100%}
+  .blocks{grid-template-columns:3.6fr 4.4fr 7.4fr 7.28fr; gap:7px; flex:1 1 auto; align-content:stretch}
+  .bk{min-height:0}
   .bk{break-inside:avoid; padding:7px 8px}
   .bk>h2 .n{background:#000; color:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}
   figure svg{max-width:132px}
@@ -155,6 +164,7 @@ footer{margin-top:18px; padding-top:8px; border-top:1px solid var(--rule); font-
   .z.w{min-width:4.2em}
   .z.ww{min-width:5.2em}
   .bk p, .bk li, .bk .inst, .cards li{overflow-wrap:break-word; word-break:normal}
+  .todaycard{margin-top:6px; padding:4px 9px; font-size:8.8pt}
   .cards{padding:6px 9px; margin-top:9px}
   .cards ul{grid-template-columns:repeat(4,1fr); gap:0 12px; font-size:8.6pt}
   .cards li{padding-left:1.8em}
@@ -172,7 +182,7 @@ footer{margin-top:18px; padding-top:8px; border-top:1px solid var(--rule); font-
 .badproof{font-size:8.6pt; padding:5px 7px}
   .bad{font-size:8.6pt}
   .gridbox{margin-top:4px}
-  footer{margin-top:10px; padding-top:6px; font-size:8pt}
+  footer{margin-top:6px; padding-top:5px; font-size:7.6pt}
 
   /* 赤刷りは解答が入るぶん縦に伸びる。a3 スキルの TARGET と同じ考えで教師用だけ寸法を下げる。 */
   body.teacher{font-size:8.4pt}

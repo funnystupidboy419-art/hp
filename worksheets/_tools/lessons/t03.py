@@ -1,133 +1,132 @@
 # -*- coding: utf-8 -*-
-"""第3時 二等辺三角形の頂角の二等分線（学校図書『数学2』p.152）"""
-import sys, os
+"""第3時 逆と反例（学校図書『数学2』p.153-154）教師主導
+   ④で第1時のふせんの問題を回収する（教科書 p.154 問6）。"""
+import sys, os, math
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build, angle_arc, angle_deg, tick, right_angle, grid, z, rz, fig
+from a3_sheet import build, angle_arc, angle_deg, tick, grid, z, rz, bz, fig, memo
 
-# ---- 図1 二等辺三角形と頂角の二等分線 ----
-A, B, C, D = (100, 18), (45, 124), (155, 124), (100, 124)
+A, B, C, D = (100, 20), (40, 122), (160, 122), (100, 122)
 f1 = "".join([
-    '<polygon class="l" points="100,18 45,124 155,124"/>',
-    '<line class="l" x1="100" y1="18" x2="100" y2="124"/>',
-    tick(A, B), tick(A, C),
-    angle_arc(A, B, D, 22), angle_arc(A, D, C, 22),
-    '<g class="ft">%s%s%s</g>' % (right_angle(D, C, A, 8, "ftline"), tick(B, D, 2, cls="ftline"), tick(D, C, 2, cls="ftline")),
-    '<text class="t" x="100" y="12" text-anchor="middle">A</text>',
-    '<text class="t" x="35" y="134">B</text><text class="t" x="159" y="134">C</text>',
-    '<text class="t" x="100" y="138" text-anchor="middle">D</text>',
+    '<polygon class="l" points="100,20 40,122 160,122"/>',
+    angle_arc(B, C, A, 20), angle_arc(C, A, B, 20),
+    '<text class="t" x="30" y="132">B</text><text class="t" x="164" y="132">C</text>',
+    '<text class="t" x="100" y="14" text-anchor="middle">A</text>',
 ])
-
-# ---- 図2 たこ形 ----
-kA, kB, kC, kD, kO = (75, 14), (25, 70), (75, 130), (125, 70), (75, 70)
-f3 = "".join([
-    '<polygon class="l" points="75,14 25,70 75,130 125,70"/>',
-    '<line class="l" x1="75" y1="14" x2="75" y2="130"/>',
-    '<line class="l" x1="25" y1="70" x2="125" y2="70"/>',
-    tick(kA, kB), tick(kA, kD), tick(kC, kB, 2), tick(kC, kD, 2),
-    '<circle cx="75" cy="70" r="2.2" fill="var(--fig)"/>',
-    '<text class="t" x="75" y="9" text-anchor="middle">A</text>',
-    '<text class="t" x="14" y="74">B</text><text class="t" x="129" y="74">D</text>',
-    '<text class="t" x="75" y="142" text-anchor="middle">C</text>',
-    '<text class="t" x="79" y="66">O</text>',
-])
-
-# ---- 図3 長さと角 ----
-gA, gB, gC, gD = (100, 16), (24.4, 124), (175.6, 124), (100, 124)
-assert abs(angle_deg(gA, gB, gD) - 35) < 0.1, angle_deg(gA, gB, gD)
 f2 = "".join([
-    '<polygon class="l" points="100,16 24.4,124 175.6,124"/>',
-    '<line class="l" x1="100" y1="16" x2="100" y2="124"/>',
-    tick(gA, gB), tick(gA, gC),
-    angle_arc(gA, gB, gD, 26), angle_arc(gA, gD, gC, 26),
-    '<text class="t" x="84" y="48">35°</text>',
-    '<text class="t" x="100" y="10" text-anchor="middle">A</text>',
-    '<text class="t" x="14" y="134">B</text><text class="t" x="179" y="134">C</text>',
-    '<text class="t" x="100" y="138" text-anchor="middle">D</text>',
-    '<text class="t" x="100" y="148" text-anchor="middle">BC＝12cm</text>',
+    '<polygon class="l" points="100,20 40,122 160,122"/>',
+    '<line class="l" x1="100" y1="20" x2="100" y2="122"/>',
+    angle_arc(B, C, A, 20), angle_arc(C, A, B, 20),
+    angle_arc(A, B, D, 22), angle_arc(A, B, D, 26),
+    angle_arc(A, D, C, 22), angle_arc(A, D, C, 26),
+    '<g class="ft">%s%s</g>' % (tick(A, B, cls="ftline"), tick(A, C, cls="ftline")),
+    '<text class="t" x="30" y="132">B</text><text class="t" x="164" y="132">C</text>',
+    '<text class="t" x="100" y="14" text-anchor="middle">A</text>',
+    '<text class="t" x="100" y="136" text-anchor="middle">D</text>',
+])
+# 第1時と同じふせんの図（回収）
+tA, tB, tC = (68.6, 38), (40, 112), (150, 112)
+assert abs(math.hypot(tA[0]-tC[0], tA[1]-tC[1]) - math.hypot(tB[0]-tC[0], tB[1]-tC[1])) < 0.2
+assert abs(angle_deg(tA, tB, tC) - angle_deg(tB, tA, tC)) < 0.1
+f3 = "".join([
+    '<line class="d" x1="8" y1="38" x2="205" y2="38"/>',
+    '<line class="d" x1="8" y1="112" x2="205" y2="112"/>',
+    '<polygon class="l" points="68.6,38 40,112 150,112" fill="var(--band)"/>',
+    '<g class="ft">%s%s%s%s</g>' % (angle_arc(tA, tB, tC, 18, "ftline"), angle_arc(tB, tA, tC, 18, "ftline"),
+                                    tick(tC, tA, cls="ftline"), tick(tC, tB, cls="ftline")),
+    '<text class="t" x="12" y="34">ℓ</text><text class="t" x="12" y="124">m</text>',
+    '<text class="t" x="66" y="32">A</text>',
+    '<text class="t" x="31" y="124">B</text><text class="t" x="154" y="124">C</text>',
+    '<text class="t" x="52" y="78">折り目</text>',
+    '<text class="t" x="118" y="70">折り返した辺</text>',
 ])
 
 SHEET = dict(
-    title="二等分線が2つ決めること",
+    title="逆はいつでも正しいか",
     ji="第3時",
-    pg="学校図書『数学2』p.152／1節 三角形（全18時間・この時間は先生と進む）",
-    goal="前の時間の合同から、角だけでなく辺と垂直も導けることを説明できる。",
-    katari="前の時間、△ABD≡△ACD を示しました。そこから取り出したのは ∠B＝∠C の<b>1つだけ</b>です。"
-           "合同からは、ほかにも取り出せることがあります。<b>取り残しを拾う</b>のが今日の仕事です。",
-    cards_title="根拠カード — 今日の新しいカードは ⑫ の1枚",
-    cards_hint="①②③と⑪は見てよい。⑫は、今日 ③(1) で取り出してから使えるようになる。",
-    cards=[("①", "3組の辺がそれぞれ等しい（4章）"),
-           ("②", "2組の辺とその間の角がそれぞれ等しい（4章）"),
-           ("③", "1組の辺とその両端の角がそれぞれ等しい（4章）"),
+    pg="学校図書『数学2』p.153-154／1節 三角形（全17時間・この時間は先生と進む）",
+    goal="あることがらの逆をつくり、正しいかどうかを証明か反例で決められる。",
+    katari="⑪は「二等辺三角形ならば、2つの角が等しい」。<b>ひっくり返したら</b>どうでしょう。"
+           "「2つの角が等しいならば、二等辺三角形」。似ていますが<b>別のことがら</b>です。"
+           "別のことがらなら、もう一度たしかめないといけません。",
+    cards_title="今日手に入れるカードは ⑬ の1枚",
+    cards_hint="①②③と⑪⑫は使ってよい。⑬は、③(1) で証明してから使えるようになる。",
+    cards=[("①②③", "三角形の合同条件（4章）"),
            ("⑪", "二等辺三角形の2つの底角は等しい"),
-           ("⑫", "<b>二等辺三角形の頂角の二等分線は、底辺を垂直に2等分する</b>（今日つくるカード）")],
-    footer="中学2年 数学　5章 三角形・四角形（全18時間）　第3時 頂角の二等分線／A3横・5ブロック",
-    memo="<b>この時間は先生と一緒に進む。教師主導はここまで。</b><br>"
-         "③(1) で「1つの合同から取り出せることは1つではない」を全員で確認する。<br>"
-         "<b>削り順</b>　③(2) を宿題 → ④② を宿題。死守するのは ③(1) と ④①。",
+           ("⑫", "二等辺三角形の頂角の二等分線は、底辺を垂直に2等分する"),
+           ("⑬", "今日 ③(1) で手に入れる")],
+    footer="中学2年 数学　5章 三角形・四角形（全17時間）　第3時 逆と反例／A3横",
     blocks=[
-# ① 前時の復習
-"""    <p class="inst">前の時間の証明を思い出す。隣の人に1つ説明する。</p>
+"""    <p class="inst">カード⑪⑫を、隣の人に1つずつ言う。</p>
     <ol>
-      <li>△ABD≡△ACD を示すのに使ったカードの番号 %s</li>
-      <li>そのとき等しいと言った3つは<br>AB＝%s、∠BAD＝%s、%s は共通</li>
-      <li>カード⑪の中身を書く
+      <li>言えなかった番号 %s</li>
+      <li>⑪を「〜ならば、〜である」の形に書きかえる
         %s</li>
     </ol>
     <div class="spacer"></div>
-    <p class="inst">今日は、この<b>同じ合同</b>をもう一度使います。</p>"""
-% (z("②"), z("AC"), z("∠CAD"), z("AD"), rz(2, "二等辺三角形の2つの底角は等しい")),
+    <p class="inst">「〜ならば」の前が<b>仮定</b>、後ろが<b>結論</b>。</p>"""
+% (z("", "w"),
+   bz(18, "△ABC で AB＝AC ならば、∠B＝∠C である。")),
 
-# ② 今日やること
-"""    <p>△ABD≡△ACD から、∠B＝∠C のほかに<b>何がわかるか</b>。</p>
+"""    <p>ことがらの<b>仮定と結論を入れかえた</b>ものを、そのことがらの<b>逆</b>という。</p>
+    <p class="inst">⑪の　仮定 %s　／　結論 %s</p>
+    <p class="inst">⑪の逆 → %s</p>
     %s
-    <p class="inst">合同な図形では、対応する%sと対応する%sが等しい。<br>
-      前の時間は「角」だけを使った。<b>辺はまだ使っていない。</b></p>
+    <p class="inst">図1は ∠B＝∠C <b>だけ</b>がわかっている三角形。
+      AB＝AC といえるか、見た目で決めずに確かめる。</p>
     <div class="spacer"></div>
     <p class="inst" style="border-top:1px dotted var(--rule); padding-top:5px">
-      <b>今日の問い</b>　1つの合同から、いくつのことが言えるか。</p>"""
-% (fig("0 0 200 150", f1, "図1　AB＝AC、AD は ∠A の二等分線"), z("辺"), z("角")),
+      <b>今日の問い</b>　逆は、いつでも正しいといえるか。</p>"""
+% (z("AB＝AC", "w"), z("∠B＝∠C", "w"), z("∠B＝∠C ならば AB＝AC", "ww"),
+   fig("0 0 200 142", f1, "図1　∠B＝∠C だけがわかっている")),
 
-# ③ 練習
 """    <ol>
-      <li><b>△ABD≡△ACD から言えることを、全部あげる。</b>（図1）
+      <li><b>∠B＝∠C ならば AB＝AC を証明する。</b>（図2）
         %s
-        <p class="inst" style="margin-top:4px">∠ADB＝∠ADC から ∠ADB の大きさが決まる理由も書く。</p>
+        <span class="inst">使う合同条件</span>%s
         %s</li>
-      <li>図2で BD の長さと ∠B を求める。カードの番号も書く。
+      <li>次の3つの<b>逆をつくり</b>、正しいかどうか調べる。
+        <span class="inst">正しくないものは<b>反例を1つ</b>あげる（1つで足りる）。</span>
+        <p class="inst" style="margin-top:4px">ア　△ABC≡△DEF ならば、∠A＝∠D である<br>
+          イ　a＝b ならば、a<sup>2</sup>＝b<sup>2</sup> である<br>
+          ウ　正三角形ならば、二等辺三角形である</p>
         %s
-        BD＝%scm　%s%s　　∠B＝%s°　%s%s</li>
+        <p style="margin-top:5px">正しい逆はいくつありましたか %s</p></li>
     </ol>"""
-% (rz(4, "① ∠B＝∠C（前の時間に使った）<br>② BD＝CD（対応する辺）<br>"
-         "③ ∠ADB＝∠ADC（対応する角）"),
-   rz(2, "∠ADB＋∠ADC＝180°（一直線）で、しかも ∠ADB＝∠ADC だから ∠ADB＝90°。<br>"
-         "②と③を合わせると「底辺を垂直に2等分する」＝<b>カード⑫</b>。"),
-   fig("0 0 210 155", f3, "図2　AB＝AC、AD は ∠A の二等分線"),
-   z("6"), '<span class="cn">カード</span>', z("⑫"),
-   z("55"), '<span class="cn">カード</span>', z("⑫")),
+% (fig("0 0 200 150", f2, "図2　∠A の二等分線と辺BC との交点を D とする"),
+   z("③"),
+   bz(42, "△ABD と △ACD において<br>"
+          "AD は ∠A の二等分線だから　∠BAD＝∠CAD　……(a)<br>"
+          "仮定より　∠B＝∠C　……(b)<br>"
+          "(a)(b)と三角形の内角の和から　∠ADB＝∠ADC　……(c)<br>"
+          "AD は共通　……(d)<br>"
+          "(a)(c)(d)より、<b>カード③</b>（1組の辺とその両端の角）から　△ABD≡△ACD<br>"
+          "対応する辺は等しいから　AB＝AC　■　→ <b>カード⑬</b>"),
+   bz(38, "アの逆「∠A＝∠D ならば △ABC≡△DEF」…… <b>正しくない</b>。"
+          "反例: 1つの角だけ等しく大きさのちがう2つの三角形（大小の三角定規）。<br>"
+          "イの逆「a<sup>2</sup>＝b<sup>2</sup> ならば a＝b」…… <b>正しくない</b>。反例: a＝2、b＝−2。<br>"
+          "ウの逆「二等辺三角形ならば、正三角形である」…… <b>正しくない</b>。反例: 3辺が 5、5、8 の三角形。<br>"
+          "→ 正しい逆は<b>0個</b>。もとが正しくても、逆が正しいとは限らない。"),
+   z("0")),
 
-# ④ JUMP
-"""    <p>四角形 ABCD は AB＝AD、CB＝CD です（図3。印の本数に注意）。</p>
+"""    <p><b>第1時のふせんを思い出す。</b>重なった部分は二等辺三角形になりそうでした。<br>
+      <b>そうなることを証明しなさい。</b></p>
     %s
-    <ol class="circ">
-      <li>AC は BD を<b>垂直に2等分する</b>ことを示しなさい。
-        %s</li>
-      <li><b>点 C だけを動かします。</b>AB＝AD はそのままにして、
-        <b>CB＝CD ではない</b>四角形 ABCD を方眼にかきなさい。<br>
-        その図で、AC は BD を2等分していますか。
-        <div class="gridbox"><svg viewBox="0 0 230 112" role="img" aria-label="作図用の方眼">%s</svg></div>
-        %s</li>
-    </ol>"""
-% (fig("0 0 150 150", f2, "図3　AB＝AD（1本線）、CB＝CD（2本線）"),
-   rz(4, "△ABC と △ADC で、AB＝AD、CB＝CD、AC は共通。<b>カード①</b>（3組の辺）から △ABC≡△ADC。<br>"
-         "よって ∠BAC＝∠DAC。<br>"
-         "△ABD は AB＝AD の二等辺三角形で、AC はその頂角 ∠BAD の二等分線。<br>"
-         "だから <b>カード⑫</b> より、AC は BD を垂直に2等分する。"),
-   grid(230, 112, 23),
-   rz(3, "<b>2等分していない。</b>C を左右どちらかにずらすと、AC は BD の真ん中を通らなくなる。<br>"
-         "AB＝AD だけでは、AC が ∠BAD の二等分線になるとは限らないから。<br>"
-         "→ ①で使った CB＝CD は、∠BAC＝∠DAC を言うために効いていた。条件は1つも余っていない。")),
-
-None,
+    <p class="inst">折り目は AB。辺 AC は、折り返す前は <b>ℓ の上</b>にあった。</p>
+    %s
+    %s"""
+% (fig("0 0 215 132", f3, "ℓ∥m。AB が折り目、AC が折り返した辺"),
+   bz(46, "折り返す前、辺 AC があった位置を AE とする（E は ℓ 上）。<br>"
+          "折り返しただけだから　∠BAC＝∠BAE　……(a)<br>"
+          "ℓ∥m で<b>錯角</b>は等しいから　∠BAE＝∠ABC　……(b)<br>"
+          "(a)(b)より　∠BAC＝∠ABC<br>"
+          "2つの角が等しいから、<b>カード⑬</b>より △ABC は二等辺三角形（CA＝CB）　■<br>"
+          "※ 教科書 p.154 問6。今日つくった⑬が、第1時の宿題の答えになる。"),
+   memo("<b>この時間で教師主導はおわり。第4時からは学び合い。</b><br>"
+        "<b>介入点（5分）</b>　③(2) に入って10分ほどで全体を止め、"
+        "「反例は1つ見つければ終わり。たくさん探さなくてよい」を言う。<br>"
+        "④が第1時の回収。<b>ここまで到達させたい。</b>錯角（4章）と⑬（今日）の2つがそろって"
+        "はじめて解ける問題で、カードが増える意味がいちばん出る。<br>"
+        "<b>削り順</b>　③(2) のウ → ③(1) の清書。死守するのは ③(1) と ④。")),
 ])
 
 if __name__ == "__main__":

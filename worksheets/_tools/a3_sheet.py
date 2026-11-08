@@ -10,9 +10,12 @@
 - カード番号 ……… ①〜⑩（4章）／⑪〜㉓（5章）
 番号の体系どうしがぶつかると、解答の「①②③より」がカード番号と読めてしまう。
 
-時間配分は既定で ①5 ②5 ③20 ④15 ⑤5（合計50分）。
-⑤のふりかえりはタブレットのアプリで行うので、紙はコード欄だけ。
-blocks[4] に None を渡すと既定の⑤が入る。教師用のメモは sheet["memo"] に書く。
+根拠カードは別紙（cards.py で作る）。紙面にはその回のカードを1行で書くだけ。
+
+ブロックは4つ（①前時の復習 ②今日やること ③練習 ④JUMP課題）。
+時間配分は既定で ①5 ②5 ③20 ④15（合計45分）。残り5分はタブレットのアプリでふりかえり。
+ふりかえりの枠は紙に置かない。4桁コードの記入欄はヘッダー右上にある。
+教師用のメモ（削り順・介入点）は、④の末尾に tonly で置く。
 
 ④に「1人では届きません」「となりと相談してよい」「どこまで自分で進めたか」は書かない。
 学び合いでは当たり前のことなので、毎回書くと紙が重くなる。
@@ -138,6 +141,18 @@ def rz(lines, ans=""):
     a = '<p class="ans">%s</p>' % ans if ans else ""
     return '<div class="rz">%s%s</div>' % (body, a)
 
+def bz(mm, ans=""):
+    """罫線なしの記述欄。高さを mm で指定する。行数が読めない記述はこちらを使う。"""
+    a = '<p class="ans">%s</p>' % ans if ans else ""
+    return '<div class="bz" style="min-height:%gmm">%s</div>' % (mm, a)
+
+
+def memo(text):
+    """④の末尾に置く教師用メモ（赤刷りのみ）。"""
+    return ('<div class="spacer"></div><p class="inst tonly" '
+            'style="border-top:1px dotted var(--rule); padding-top:5px">%s</p>' % text)
+
+
 def fig(view, body, caption, flex=None):
     st = ' style="flex:1 1 %s; min-width:0"' % flex if flex else ""
     return ('<figure%s><svg viewBox="%s" role="img" aria-label="%s">%s</svg>'
@@ -161,7 +176,8 @@ _TPL = """<title>{title}</title>
     <span class="ji">{ji}</span>
     <span class="pg">{pg}</span>
     <span class="goal"><b>めあて</b>　{goal}</span>
-    <span class="nm"><span>組<u></u></span><span>番<u></u></span><span>名前<u style="width:88px"></u></span></span>
+    <span class="nm"><span>組<u></u></span><span>番<u></u></span><span>名前<u style="width:76px"></u></span></span>
+    <span class="codebox"><b>ふりかえりのコード</b><span></span><span></span><span></span><span></span></span>
   </div>
   <p class="katari"><b>語り</b>　{katari}</p>
 </header>
@@ -172,13 +188,7 @@ _TPL = """<title>{title}</title>
   <span class="barnote">印刷は A3・横。いま表示している側（生徒用／赤刷り）がそのまま印刷されます。</span>
 </div>
 
-<div class="cards">
-  <h3>{cards_title}</h3>
-  <ul>
-{cards}
-  </ul>
-  <p class="hint">{cards_hint}</p>
-</div>
+<p class="todaycard"><b>{cards_title}</b>　{cards_hint}</p>
 
 <div class="blocks">
 {blocks}
@@ -209,34 +219,18 @@ _BLOCK = """  <section class="bk">
   </section>
 """
 
-_NAMES = ["前時の復習", "今日やること", "練習", "JUMP課題", "ふりかえり"]
-
-# ⑤ はどの回も同じ。ふりかえりはタブレットのアプリで行うので、紙はコード欄だけ。
-_REFLECT = """    <p class="inst">ふりかえりは<b>タブレットのアプリ</b>で行う。</p>
-    <p style="margin-top:8px">今日のコード</p>
-    <div class="codebox"><span></span><span></span><span></span><span></span></div>
-    <p class="inst" style="margin-top:6px">黒板のコードを写してから、アプリに入力する。</p>
-    <div class="spacer"></div>
-{memo}"""
-
-def reflect(memo):
-    """⑤ブロック。memo は赤刷りだけに出る教師用のメモ（削り順・介入点など）。"""
-    m = ('    <p class="inst tonly" style="border-top:1px dotted var(--rule); padding-top:5px">%s</p>'
-         % memo) if memo else ""
-    return _REFLECT.format(memo=m)
-_MINS = [5, 5, 20, 15, 5]
+_NAMES = ["前時の復習", "今日やること", "練習", "JUMP課題"]
+_MINS = [5, 5, 20, 15]
 
 def build(sheet, out_path):
     mins = sheet.get("mins", _MINS)
-    if sheet["blocks"][4] is None:                 # ⑤ を既定（アプリでふりかえり）にする
-        sheet["blocks"][4] = reflect(sheet.get("memo", ""))
-    assert sum(mins) == 50, "5ブロックの合計が50分になっていません: %s" % (mins,)
+    assert sum(mins) == 45, "4ブロックの合計が45分（＋アプリのふりかえり5分）になっていません: %s" % (mins,)
     names = sheet.get("names", _NAMES)
+    assert len(mins) == len(names) == len(sheet["blocks"]) == 4
     blocks = "".join(
-        _BLOCK.format(n="①②③④⑤"[i], name=names[i], min=mins[i], body=sheet["blocks"][i])
-        for i in range(5))
-    cards = "\n".join('    <li><i>%s</i>%s</li>' % (c[0], c[1]) for c in sheet["cards"])
-    html = _TPL.format(css=_css(), blocks=blocks, cards=cards, **{
+        _BLOCK.format(n="①②③④"[i], name=names[i], min=mins[i], body=sheet["blocks"][i])
+        for i in range(4))
+    html = _TPL.format(css=_css(), blocks=blocks, **{
         k: sheet[k] for k in
         ("title", "ji", "pg", "goal", "katari", "cards_title", "cards_hint", "footer")})
     with io.open(out_path, "w", encoding="utf-8") as f:
