@@ -10,7 +10,12 @@
 - カード番号 ……… ①〜⑩（4章）／⑪〜㉓（5章）
 番号の体系どうしがぶつかると、解答の「①②③より」がカード番号と読めてしまう。
 
-時間配分は既定で ①5 ②5 ③20 ④12 ⑤8（合計50分）。
+時間配分は既定で ①5 ②5 ③20 ④15 ⑤5（合計50分）。
+⑤のふりかえりはタブレットのアプリで行うので、紙はコード欄だけ。
+blocks[4] に None を渡すと既定の⑤が入る。教師用のメモは sheet["memo"] に書く。
+
+④に「1人では届きません」「となりと相談してよい」「どこまで自分で進めたか」は書かない。
+学び合いでは当たり前のことなので、毎回書くと紙が重くなる。
 教師主導の回など配分を変えるときは sheet["mins"] で上書きする（合計50分を検査する）。
 ブロック名を変えるときは sheet["names"]。
 
@@ -205,10 +210,26 @@ _BLOCK = """  <section class="bk">
 """
 
 _NAMES = ["前時の復習", "今日やること", "練習", "JUMP課題", "ふりかえり"]
-_MINS = [5, 5, 20, 12, 8]
+
+# ⑤ はどの回も同じ。ふりかえりはタブレットのアプリで行うので、紙はコード欄だけ。
+_REFLECT = """    <p class="inst">ふりかえりは<b>タブレットのアプリ</b>で行う。</p>
+    <p style="margin-top:8px">今日のコード</p>
+    <div class="codebox"><span></span><span></span><span></span><span></span></div>
+    <p class="inst" style="margin-top:6px">黒板のコードを写してから、アプリに入力する。</p>
+    <div class="spacer"></div>
+{memo}"""
+
+def reflect(memo):
+    """⑤ブロック。memo は赤刷りだけに出る教師用のメモ（削り順・介入点など）。"""
+    m = ('    <p class="inst tonly" style="border-top:1px dotted var(--rule); padding-top:5px">%s</p>'
+         % memo) if memo else ""
+    return _REFLECT.format(memo=m)
+_MINS = [5, 5, 20, 15, 5]
 
 def build(sheet, out_path):
     mins = sheet.get("mins", _MINS)
+    if sheet["blocks"][4] is None:                 # ⑤ を既定（アプリでふりかえり）にする
+        sheet["blocks"][4] = reflect(sheet.get("memo", ""))
     assert sum(mins) == 50, "5ブロックの合計が50分になっていません: %s" % (mins,)
     names = sheet.get("names", _NAMES)
     blocks = "".join(
