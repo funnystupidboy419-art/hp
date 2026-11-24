@@ -3,7 +3,7 @@
    JUMP は練習プリント「図形の性質と証明①」の5 から。"""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build, angle_arc, tick, z, rz, bz, fig, memo
+from a3_sheet import build, angle_arc, tick, z, rz, bz, fig, memo, put_sign
 
 A, B, C = (100, 16), (35, 126), (165, 126)
 D, E = (57.8, 87.5), (142.2, 87.5)
@@ -133,6 +133,12 @@ SHEET = dict(
         "「正しいが、読めない」証明だと伝える。<br>"
         "④は⑪→⑬と2枚続けて使う。ここまで届いた生徒がいたら全体に紹介する。")),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    'BE＝CD を証明する。',
+    '自分の書いた証明を<b>読み上げて</b>説明する。聞く人は、根拠がことばで書かれているか、飛ばしがないかを確かめる。',
+    'AD＝AE を出すところ（AB−BD、AC−CE）が抜けていないか。根拠を番号だけでなく<b>内容のことば</b>で言えているか。聞く人が図を見ながら追えたらサイン。')
 
 if __name__ == "__main__":
     print(build(SHEET, sys.argv[1]), "bytes")

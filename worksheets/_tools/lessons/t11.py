@@ -3,7 +3,7 @@
    ㉓ を導き、四角形を面積の等しい三角形に直すところまで。"""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build, angle_arc, tick, par, right_angle, z, bz, fig, memo
+from a3_sheet import build, angle_arc, tick, par, right_angle, z, bz, fig, memo, put_sign
 
 # 図1 ℓ∥m、底辺 BC 共通、頂点が ℓ 上
 B1, C1, A1, D1 = (40, 120), (160, 120), (70, 30), (140, 30)
@@ -110,12 +110,12 @@ SHEET = dict(
         　%s　%s　%s
         <span class="inst">それぞれ<b>どの平行線</b>を使ったか。</span>%s</li>
     </ol>"""
-% (bz(22, "ℓ∥m だから、A と D から BC までの距離（高さ）は等しい。<br>"
+% (bz(18, "ℓ∥m だから、A と D から BC までの距離（高さ）は等しい。<br>"
           "底辺 BC は共通なので、底辺×高さ÷2 が等しい。よって面積が等しい。"
           "　→ これが<b>根拠㉓</b>"),
    fig("0 0 215 142", f2, "図2　AD∥BC", "128px"),
    z("△DBC", "w"), z("㉓"),
-   bz(26, "AD∥BC だから（根拠㉓）△ABC＝△DBC。<br>"
+   bz(22, "AD∥BC だから（根拠㉓）△ABC＝△DBC。<br>"
           "どちらからも共通部分の △OBC をひくと<br>"
           "△ABC−△OBC＝△ABO、△DBC−△OBC＝△DCO<br>"
           "よって △ABO＝△DCO　■"),
@@ -153,6 +153,12 @@ SHEET = dict(
         "<b>削り順</b>　③(2)㋐ を省く。死守するのは ③(1)(2)㋑(3) と ④。<br>"
         "<b>2枚目</b>（発展プリント）に、この続き（面積比と、その逆向き）を用意してある。")),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    '<b>AC∥EF</b> である',
+    '△ACF と面積の等しい三角形3つについて、<b>それぞれどの平行線を使ったか</b>を説明する。',
+    'AC∥EF・AD∥BC・AB∥DC の3組を、<b>共通な底辺と頂点の位置</b>を指して言えたらサイン。')
 
 if __name__ == "__main__":
     print(build(SHEET, sys.argv[1]), "bytes")

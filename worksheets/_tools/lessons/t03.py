@@ -3,7 +3,7 @@
    ④で第1時のふせんの問題を回収する（教科書 p.154 問6）。"""
 import sys, os, math
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build, angle_arc, angle_deg, tick, grid, z, rz, bz, fig, memo
+from a3_sheet import build, angle_arc, angle_deg, tick, grid, z, rz, bz, fig, memo, put_sign
 
 A, B, C, D = (100, 20), (40, 122), (160, 122), (100, 122)
 f1 = "".join([
@@ -128,6 +128,12 @@ SHEET = dict(
         "はじめて解ける問題で、カードが増える意味がいちばん出る。<br>"
         "<b>削り順</b>　③(2) のウ → ③(1) の清書。死守するのは ③(1) と ④。")),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    '逆をつくり</b>、正しいかどうか調べる',
+    '正しくない逆を1つ選び、<b>反例</b>を見せて「正しくない」と説明する。',
+    '逆の文が正しく言えて、反例が<b>具体的に1つ</b>示せたらサイン（例: 3辺が 5、5、8 の三角形）。「なんとなくちがう」はサインしない。')
 
 if __name__ == "__main__":
     print(build(SHEET, sys.argv[1]), "bytes")

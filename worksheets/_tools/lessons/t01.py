@@ -2,7 +2,7 @@
 """第1時 単元のゴールと、数学的な見方・考え方（学校図書『数学2』p.148-149）教師主導"""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build, angle_arc, tick, z, rz, bz, fig, memo
+from a3_sheet import build, angle_arc, tick, z, rz, bz, fig, memo, put_sign
 
 # 帯を折ると重なった部分が二等辺三角形になる（第3時で回収する）
 # 帯を折ると、重なった部分が二等辺三角形になる（第3時の④で回収する）
@@ -120,6 +120,12 @@ SHEET = dict(
         "（⑬「2つの角が等しい三角形は二等辺三角形」で証明できるようになる）。<br>"
         "<b>削り順</b>　④ → ①の表の記入。死守するのは ② と ③。")),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    '<b>どんな折り方でも、そうなりますか。</b>',
+    '重なった部分が二等辺三角形になりそうだと思ったわけを、<b>図のどこに目をつけたか</b>を指しながら説明する。',
+    '平行な2辺（ℓ∥m）、折り目で重なる角、等しく見える辺など、<b>目をつけた場所を指して</b>言えたらサイン。証明はまだいらない（第3時で回収）。')
 
 if __name__ == "__main__":
     print(build(SHEET, sys.argv[1]), "bytes")

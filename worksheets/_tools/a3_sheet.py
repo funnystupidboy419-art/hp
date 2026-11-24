@@ -31,7 +31,7 @@
 角の弧を手で書かないこと（sweep-flag を間違えると弧が反対側に出る。
 見た目では気づきにくく、実際に第2時と A4版 v2 で起きた）。
 """
-import math, os, io
+import math, os, io, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -164,6 +164,51 @@ def bz(mm, ans=""):
     """罫線なしの記述欄。高さを mm で指定する。行数が読めない記述はこちらを使う。"""
     a = '<p class="ans">%s</p>' % ans if ans else ""
     return '<div class="bz" style="min-height:%gmm">%s</div>' % (mm, a)
+
+
+def sign(what, point=""):
+    """説明サイン。男女1名ずつに説明し、納得できたらサインをもらう。
+
+    what  … その設問の目標に合わせた「何を説明するか」（生徒用・赤刷りとも出る）
+    point … 赤刷りのみ。サインしてよい目安＝説明に入っていてほしいこと
+    """
+    a = '<p class="ans"><b>サインの目安</b>　%s</p>' % point if point else ""
+    return ('<div class="sign"><p class="sgq"><span class="sgl">説明サイン</span>%s</p>'
+            '<div class="sgrow"><span class="sgi">男女1名ずつに説明する。'
+            '納得できたらサインをもらう。</span><i></i><i></i></div>'
+            '%s</div>' % (what, a))
+
+
+def put_sign(sheet, key, what, point=""):
+    """key を含む設問（li）の最後に説明サインを入れる。1枚に1か所、設問のねらいに合わせて置く。"""
+    box = sign(what, point)
+    def ins(html):
+        i = html.find(key)
+        if i < 0:
+            return None
+        opens = [m.start() for m in re.finditer(r"<li[ >]", html) if m.start() < i]
+        if not opens:
+            raise ValueError("説明サイン: 設問（li）の中にない key: " + key)
+        st, depth = opens[-1], 0
+        for m in re.finditer(r"<li[ >]|</li>", html[st:]):
+            depth += 1 if m.group().startswith("<li") else -1
+            if depth == 0:
+                j = st + m.start()
+                return html[:j] + box + html[j:]
+        raise ValueError("説明サイン: li が閉じていない: " + key)
+    if "blocks" in sheet:
+        for k, b in enumerate(sheet["blocks"]):
+            r = ins(b)
+            if r is not None:
+                sheet["blocks"][k] = r
+                return
+    else:
+        for k, (h, b) in enumerate(sheet["cols"]):
+            r = ins(b)
+            if r is not None:
+                sheet["cols"][k] = (h, r)
+                return
+    raise ValueError("説明サイン: key が見つからない: " + key)
 
 
 def memo(text):

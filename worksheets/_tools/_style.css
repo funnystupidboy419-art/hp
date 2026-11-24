@@ -141,6 +141,17 @@ body.teacher .bz{border-color:var(--accent-soft)}
 footer{margin-top:18px; padding-top:8px; border-top:1px solid var(--rule); font-size:11px; color:var(--graphite);
   display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px}
 
+/* ---- 説明サイン（男女1名ずつに説明し、納得できたらサイン） ---- */
+.sign{border:1.5px solid var(--ink); padding:5px 8px; margin-top:6px; background:var(--surface)}
+.bk .sign p{margin:0}
+.sign .sgq{font-size:12px}
+.sign .sgl{background:var(--ink); color:var(--surface); padding:0 5px; margin-right:5px; font-weight:700}
+.sign .sgi{flex:0 1 46%; line-height:1.35}
+.sign .sgrow{display:flex; gap:6px; align-items:center; margin-top:3px; font-size:10.5px; color:var(--graphite)}
+.sign .sgrow i{flex:1; height:10mm; border:1px solid var(--rule)}
+.sign .ans{display:none; color:var(--accent); font-size:11.5px; line-height:1.5; margin-top:3px}
+body.teacher .sign .ans{display:block}
+
 @page{size:A3 landscape; margin:8mm}
 @media print{
   :root,:root[data-theme]{
@@ -202,4 +213,15 @@ footer{margin-top:18px; padding-top:8px; border-top:1px solid var(--rule); font-
   body.teacher .badproof, body.teacher .think{font-size:8pt; padding:4px 6px}
   body.teacher .cards ul{font-size:8pt}
   body.teacher .katari{font-size:8.2pt}
+  .sign{padding:3px 6px; margin-top:4px}
+  .sign .sgq{font-size:9pt}
+  .sign .sgl{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  .sign .sgi, .sign .sgrow{font-size:7.8pt}
+  .sign .sgrow i{height:7mm}
+  body.teacher .sign .sgrow{display:none}
+  body.teacher .sign .ans{font-size:7.8pt; line-height:1.38}
+  body.teacher .sign .sgq{font-size:8.4pt}
+  /* 赤刷りはサイン枠を出さず、ねらいと目安を1段落に流して高さを節約する */
+  body.teacher .sign .sgq, body.teacher .sign .ans{display:inline}
+  body.teacher .sign .ans{margin-left:6px}
 }

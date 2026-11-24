@@ -3,7 +3,7 @@
    ステップ式にしない。問題を多く、余白は書ける高さで。"""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build_practice, angle_arc, angle_deg, tick, par, z, bz, fig, memo
+from a3_sheet import build_practice, angle_arc, angle_deg, tick, par, z, bz, fig, memo, put_sign
 
 A, D, B, C = (50, 24), (190, 24), (20, 118), (160, 118)
 lab = ('<text class="t" x="44" y="18">A</text><text class="t" x="192" y="18">D</text>'
@@ -162,6 +162,12 @@ SHEET = dict(
          "「面積」2は第11時④と同じ問題。<b>できるようになったかの確認</b>に使う。<br>"
          "<b>削り順</b>　証明2㋑ → 面積2。死守するのは「ことばの確認」と各列の1問目。"))),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    '<b>必ず平行四辺形になる</b>のはどれ',
+    '㋐〜㋓のうち<b>選ばなかったもの</b>について、なぜ「必ず」とはいえないのかを説明する。',
+    '㋐は等脚台形になりうる、と<b>図をかいて見せられたら</b>サイン（反例で示す）。㋓も同じ。')
 
 if __name__ == "__main__":
     print(build_practice(SHEET, sys.argv[1]), "bytes")

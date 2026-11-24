@@ -3,7 +3,7 @@
    ㉒「1組の対辺が平行でその長さが等しい」を丁寧に。以後の証明でいちばん使う根拠。"""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build, angle_arc, tick, par, z, bz, fig, memo
+from a3_sheet import build, angle_arc, tick, par, z, bz, fig, memo, put_sign
 
 A, D, B, C = (50, 24), (190, 24), (20, 118), (160, 118)
 lab = ('<text class="t" x="44" y="18">A</text><text class="t" x="192" y="18">D</text>'
@@ -122,6 +122,12 @@ SHEET = dict(
         "<b>宿題</b>　❷❸❹（⑲⑳㉑）の証明。⑯⑰⑱の逆で、対角線をひけば同じようにできる。<br>"
         "<b>削り順</b>　③(2) を宿題 → ④を次の時間の最初に回す。死守するのは ③(1)。")),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    'AD∥BC、AD＝BC ならば',
+    '「1組の対辺が平行で長さが等しい」だけで平行四辺形といえるわけを、<b>あと何がいえればよいか</b>から説明する。',
+    '定義にもどると AB∥DC がいえればよい → 錯角 → 合同 → だから対角線 AC をひく、の<b>ゴールから逆にたどる考え</b>が言えたらサイン。')
 
 if __name__ == "__main__":
     print(build(SHEET, sys.argv[1]), "bytes")

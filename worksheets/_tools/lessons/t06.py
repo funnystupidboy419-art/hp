@@ -3,7 +3,7 @@
    ステップ式にしない。練習問題を多く並べ、余白は書ける分だけ取る。"""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build_practice, angle_arc, angle_deg, tick, right_angle, z, bz, fig, memo
+from a3_sheet import build_practice, angle_arc, angle_deg, tick, right_angle, z, bz, fig, memo, put_sign
 
 def iso(A, B, C, lab, extra=""):
     return "".join(['<polygon class="l" points="%g,%g %g,%g %g,%g"/>' % (A+B+C),
@@ -177,6 +177,12 @@ SHEET = dict(
          "「証明（直角三角形）」で止まる＝補助線（AC を結ぶ）が出ていない。<br>"
          "<b>削り順</b>　証明（直角三角形）の2 → 角を求めるの4。死守するのは「ことばの確認」と各証明の1問目。"))),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    '△PBC はどんな三角形',
+    '△PBC が二等辺三角形になるわけを、<b>どのカードを、なぜ選んだか</b>を入れて説明する。',
+    '⑪で底角、(1)の合同で ∠ABE＝∠ACD、差をとって ∠PBC＝∠PCB、⑬で二等辺三角形。<b>カードを選んだ理由</b>まで言えたらサイン。')
 
 if __name__ == "__main__":
     print(build_practice(SHEET, sys.argv[1]), "bytes")

@@ -3,7 +3,7 @@
    導入で四角形の名前を書き出させる。赤刷りは一覧にする。"""
 import sys, os, math
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build, angle_arc, angle_deg, tick, par, right_angle, z, bz, fig, memo
+from a3_sheet import build, angle_arc, angle_deg, tick, par, right_angle, z, bz, fig, memo, put_sign
 
 # 長方形
 rA, rD, rB, rC = (40, 30), (180, 30), (40, 120), (180, 120)
@@ -138,6 +138,12 @@ SHEET = dict(
         "<b>「平行四辺形に」という前提が効いている</b>ことに気づける。<br>"
         "<b>削り順</b>　③(3) を宿題 → ④(2) を宿題。死守するのは ②と③(1)(2)。")),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    '∠A＝90° を加えると長方形',
+    '平行四辺形に ∠A＝90° を加えると長方形になるわけを、<b>長方形の定義</b>にもどって説明する。',
+    '対角は等しい・となり合う角の和は180° から4つの角がすべて90°、だから<b>定義（4つの角が等しい）</b>を満たす、が言えたらサイン。')
 
 if __name__ == "__main__":
     print(build(SHEET, sys.argv[1]), "bytes")

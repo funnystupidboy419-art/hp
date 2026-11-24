@@ -6,7 +6,7 @@
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build_practice, tick, par, z, bz, fig as _fig, memo
+from a3_sheet import build_practice, tick, par, z, bz, fig as _fig, memo, put_sign
 
 def fig(view, body, caption, flex=None):
     # 印刷時も列幅いっぱいまで図を大きくする
@@ -124,16 +124,16 @@ SHEET = dict(
       <li>点 P を辺 BC 上の<b>どこにとっても</b>、(2) の答えは同じですか。%s</li>
     </ol>"""
  % (fig("0 0 225 140", f3, "AP∥DQ（3本線）。Q は BC の延長上"),
-    bz(30, "AD∥BC だから、AD∥PQ　……(a)<br>"
+    bz(24, "AD∥BC だから、AD∥PQ　……(a)<br>"
            "作り方より　AP∥DQ　……(b)<br>"
            "(a)(b)より、2組の対辺がそれぞれ平行だから（<b>定義</b>）四角形 APQD は平行四辺形　■"),
     z("1：1", "w"),
-    bz(42, "(1) より APQD は平行四辺形だから、2組の対辺はそれぞれ等しく（<b>根拠⑯</b>）　PQ＝AD<br>"
+    bz(32, "(1) より APQD は平行四辺形だから、2組の対辺はそれぞれ等しく（<b>根拠⑯</b>）　PQ＝AD<br>"
            "□ABCD の対辺も等しいから（<b>根拠⑯</b>）　AD＝BC<br>"
            "よって　PQ＝BC<br>"
            "△APQ と △ABC は、頂点 A が共通で、底辺 PQ と BC が<b>同じ直線上</b>。<br>"
            "→ 高さが等しく、底辺も等しいから　<b>△APQ：△ABC＝1：1</b>　■"),
-    bz(18, "同じ。P を動かすと Q も一緒に動くが、PQ＝AD＝BC は変わらず、"
+    bz(14, "同じ。P を動かすと Q も一緒に動くが、PQ＝AD＝BC は変わらず、"
            "高さも変わらないから。<br>これが<b>等積変形</b>（根拠㉓）。"))),
 
 ("発展　逆向きに考える",
@@ -176,6 +176,12 @@ SHEET = dict(
          "<b>相似は使わない。</b>「辺の比の2乗」には中3の内容だと伝え、<b>高さ</b>に注目させる。<br>"
          "<b>削り順</b>　パターン2の㋐ → 4列目(1)。死守は1㋑・3・4列目(2)。"))),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    '辺 BC 上の<b>どこにとっても</b>',
+    'P をどこにとっても面積比が変わらないわけを、<b>何が変わらないのか</b>を入れて説明する。',
+    '底辺 PQ（＝AD＝BC）と高さが変わらない、の<b>2つ</b>が言えたらサイン。')
 
 if __name__ == "__main__":
     print(build_practice(SHEET, sys.argv[1]), "bytes")

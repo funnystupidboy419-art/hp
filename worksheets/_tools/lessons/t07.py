@@ -3,7 +3,7 @@
    定義から ⑯⑰⑱ の3枚をまとめて導く。1本の対角線から2枚、2本めで1枚。"""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build, angle_arc, angle_deg, tick, par, z, bz, fig, memo
+from a3_sheet import build, angle_arc, angle_deg, tick, par, z, bz, fig, memo, put_sign
 
 A, D, B, C = (50, 24), (190, 24), (20, 118), (160, 118)
 O = (105, 71)
@@ -110,6 +110,12 @@ SHEET = dict(
         "<b>削り順</b>　③(2) の ∠B＝∠D → ④。死守するのは ③(1)。"
         "④まで届かなければ、次の時間の最初に全体で扱う。")),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    'AB＝DC、AD＝BC を証明する',
+    '対辺が等しいことを、<b>定義（2組の対辺が平行）だけ</b>から導いたとわかるように説明する。',
+    '対角線をひいて2つの三角形に分ける理由と、錯角が等しいのは<b>定義の「平行」から</b>、が言えたらサイン。')
 
 if __name__ == "__main__":
     print(build(SHEET, sys.argv[1]), "bytes")

@@ -3,7 +3,7 @@
    ステップ式にしない。問題を多く、余白は書ける高さで。"""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build_practice, angle_arc, angle_deg, tick, par, z, bz, fig, memo
+from a3_sheet import build_practice, angle_arc, angle_deg, tick, par, z, bz, fig, memo, put_sign
 
 A, D, B, C = (50, 24), (190, 24), (20, 118), (160, 118)
 lab = ('<text class="t" x="44" y="18">A</text><text class="t" x="192" y="18">D</text>'
@@ -134,13 +134,13 @@ SHEET = dict(
     </ol>
     %s"""
  % (fig("0 0 215 140", f2, "図5　AE＝CF", "150px"),
-    bz(34, "AD∥BC だから、その一部である　AE∥FC　……(a)<br>"
+    bz(30, "AD∥BC だから、その一部である　AE∥FC　……(a)<br>"
            "仮定より　AE＝CF　……(b)<br>"
            "(a)(b)より、1組の対辺が平行でその長さが等しいから（<b>根拠㉒</b>）"
            "四角形 AECF は平行四辺形　■<br>"
            "※ 左の「証明（性質を使う）1」と同じ図。<b>示したいものがちがうと、使う根拠も変わる。</b>"),
     fig("0 0 215 140", f4, "図6　O は対角線の交点", "150px"),
-    bz(38, "△AOP と △COQ において、⑱より AO＝CO、対頂角は等しく、AD∥BC の錯角も等しいから"
+    bz(32, "△AOP と △COQ において、⑱より AO＝CO、対頂角は等しく、AD∥BC の錯角も等しいから"
            "（根拠③）△AOP≡△COQ。よって PO＝QO。<br>"
            "対角線 AC と PQ について、AO＝CO、PO＝QO だから、"
            "2つの対角線がそれぞれの中点で交わる（<b>根拠㉑</b>）。<br>"
@@ -153,6 +153,12 @@ SHEET = dict(
          "「条件を使う」で止まる＝性質と条件の区別がついていない。<br>"
          "<b>削り順</b>　「条件を使う」2 →「角と長さ」3。死守するのは各列の1問目。"))),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    '対角線の交点 O を通る直線',
+    '四角形 APCQ が平行四辺形になるわけを、<b>性質を使ったところ</b>と<b>条件を使ったところ</b>を分けて説明する。',
+    'AO＝CO は性質（⑱）、最後の「平行四辺形である」は条件（㉑）。<b>この使い分け</b>が言えたらサイン。')
 
 if __name__ == "__main__":
     print(build_practice(SHEET, sys.argv[1]), "bytes")

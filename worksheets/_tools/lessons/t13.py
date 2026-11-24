@@ -2,7 +2,7 @@
 """第13時 5章のまとめの問題（基本・応用）（学校図書『数学2』p.175-176）学び合い"""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from a3_sheet import build_practice, angle_arc, angle_deg, tick, par, right_angle, z, bz, fig, memo
+from a3_sheet import build_practice, angle_arc, angle_deg, tick, par, right_angle, z, bz, fig, memo, put_sign
 
 # 基本2 ∠A＝36°、∠B の二等分線と AC の交点 D
 A2, B2, C2, D2 = (100, 16), (65.6, 122), (134.4, 122), (121.3, 81.5)
@@ -146,6 +146,12 @@ SHEET = dict(
          "「応用」は1節と2節を1つの図で使う。届いた生徒を全体に紹介する。<br>"
          "<b>削り順</b>　応用 → 角と図形の判断2。死守するのは「証明（平行四辺形）」。"))),
 ])
+
+# 説明サイン（男女1名ずつに説明し、納得できたらサイン）。設問のねらいに合わせて1か所。
+put_sign(SHEET,
+    '四角形 AECF は平行四辺形である',
+    '四角形 AECF が平行四辺形になるわけを、<b>どのカードを選んだか</b>、<b>なぜそのカードか</b>を入れて説明する。',
+    '(1)の合同から AE＝CF、垂直から AE∥CF → 1組の対辺が平行で等しい（㉒）。<b>㉒を選んだ理由</b>まで言えたらサイン。')
 
 if __name__ == "__main__":
     print(build_practice(SHEET, sys.argv[1]), "bytes")
