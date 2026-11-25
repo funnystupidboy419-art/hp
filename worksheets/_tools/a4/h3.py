@@ -52,11 +52,13 @@ q(1, "△ABC の辺 AB、AC 上に、<b>DE∥BC</b> となる点 D、E をとり
      "面積の等しい三角形の組を<b>4つ</b>見つけなさい。", "",
   '<div class="row c2" style="grid-template-columns:58mm 1fr; align-items:start">%s'
   '<div><p>%s と %s　　%s と %s</p><p>%s と %s　　%s と %s</p>'
-  '<p class="inst">ヒント　1組見つけたら、そこから<b>共通な部分をひく・たす</b>と次が見つかる。</p><p>そのうち2組について、理由を書きなさい。</p>%s</div></div>'
+  '<p class="inst">ヒント　1組見つけたら、そこから<b>共通な部分をひく・たす</b>と次が見つかる。</p><p>そのうち2組について、理由を書きなさい。根拠は内容をことばで書いてから（根拠○）。</p>%s</div></div>'
   % (fig("0 0 178 122", f1, "DE∥BC"),
      z("△DBC"), z("△EBC"), z("△DBE"), z("△DCE"), z("△DBO"), z("△ECO"), z("△ABE"), z("△ACD"),
-     bz(20, "△DBC＝△EBC と △DBE＝△DCE は DE∥BC（根拠㉓）。"
-            "△DBO＝△ECO は △DBC−△OBC と △EBC−△OBC。△ABE＝△ACD は △ADE＋△DBE と △ADE＋△DCE。"))),
+     bz(20, "DE∥BC だから、平行線にはさまれ共通な底辺をもつ三角形の面積は等しい（根拠㉓）。"
+            "→ △DBC＝△EBC（底辺 BC）、△DBE＝△DCE（底辺 DE）。<br>"
+            "△DBO＝△ECO は、△DBC と △EBC から共通な △OBC をひく。"
+            "△ABE＝△ACD は、△ADE に △DBE と △DCE をたす。"))),
 
 q(2, "四角形 ABCD と面積の等しい <b>△PCD</b> を、点 P を直線 BC 上にとってかきなさい。"
      "かき方も書きなさい。", "",
@@ -64,12 +66,12 @@ q(2, "四角形 ABCD と面積の等しい <b>△PCD</b> を、点 P を直線 B
   % (fig("0 0 200 134", f2, "点線は直線 BC"),
      bz(46, "対角線 BD をひく。点 A を通り BD に平行な直線をひき、直線 BC との交点を P とする。"
             "P と D を結ぶ。<br>"
-            "理由: AP∥BD だから △ABD＝△PBD（根拠㉓）。"
+            "理由: AP∥BD だから、平行線にはさまれ共通な底辺 BD をもつ △ABD と △PBD の面積は等しい（根拠㉓）。"
             "四角形 ABCD＝△ABD＋△BCD＝△PBD＋△BCD＝△PCD"))),
 
 '<div class="row c2" style="align-items:start">',
 q(3, "□ABCD で、<b>BE：EC＝1：2</b>、<b>CF：FD＝1：1</b> のとき、次の面積は □ABCD の何倍ですか。", "",
-  fig("0 0 196 112", f3, "", 62)
+  fig("0 -4 196 122", f3, "", 58)
   + '<ol class="sub" style="display:grid; grid-template-columns:1fr 1fr; gap:0 10px">'
     '<li>△ABE　%s</li><li>△AFD　%s</li><li>△ECF　%s</li><li>△AEF　%s</li></ol><p class="inst">(3)(4) の求め方</p>%s'
   % (z("1/6 倍", "w"), z("1/4 倍", "w"), z("1/6 倍", "w"), z("5/12 倍", "w"),
@@ -81,7 +83,7 @@ q(4, "<b>発展</b>　□ABCD の内部に点 P をとる。<b>△PAB＋△PCD</
   + '<p>答　%s</p>%s'
   % (z("1/2 倍", "w"),
      bz(30, "AB と DC を底辺とみると、2つの三角形の高さの和は、AB と DC の間の距離（□ABCD の高さ）"
-            "に等しい。AB＝DC だから<br>△PAB＋△PCD＝AB×（高さの和）÷2＝□ABCD÷2。"
+            "に等しい。平行四辺形の対辺は等しいから（根拠⑯）AB＝DC。<br>△PAB＋△PCD＝AB×（高さの和）÷2＝□ABCD÷2。"
             "<b>P がどこにあっても変わらない。</b>"))),
 '</div>',
 

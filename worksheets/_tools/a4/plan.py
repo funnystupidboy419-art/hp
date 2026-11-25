@@ -79,8 +79,8 @@ body = """
 <section class="q"><h3><span class="n">2</span><span class="t">評価計画</span><span class="pt"></span></h3>
 <table class="plan" style="margin-top:4px">
 <tr><th>観点</th><th>主な評価場面</th></tr>
-<tr><td><b>知識・技能</b></td><td>確かめよう（第6・9・12時）、小テスト①〜③、単元テスト（68点）</td></tr>
-<tr><td><b>思考・判断<br>・表現</b></td><td>証明を書く時間（第4・13・14時）のワークシート、説明サイン、単元テスト（32点・証明の穴うめ）</td></tr>
+<tr><td><b>知識・技能</b></td><td>確かめよう（第6・12時）・練習（第9時）、小テスト①〜③の【知】、単元テスト（68点）</td></tr>
+<tr><td><b>思考・判断<br>・表現</b></td><td>証明を書く時間（第4・13・14時）のワークシート、説明サイン、小テスト①〜③の【思】、単元テスト（32点・証明の穴うめ）</td></tr>
 <tr><td><b>態度</b></td><td>第1・14時の記述（単元を貫く課題）、アプリのふりかえり、説明サインでの説明・吟味</td></tr>
 </table></section>
 <section class="q"><h3><span class="n">3</span><span class="t">日程の目安（週3時間）</span><span class="pt"></span></h3>

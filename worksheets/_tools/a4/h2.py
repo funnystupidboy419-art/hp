@@ -49,7 +49,7 @@ E = (B[0] + 5*10.5, B[1]); F = (D[0] - 5*10.5, D[1])
 check_angle(A, B, E, 60); check_angle(A, E, D, 60); check_angle(C, D, F, 60); check_angle(C, F, B, 60)
 g2 = (poly(A, D, C, B) + seg(A, E) + seg(C, F)
       + angle_arc(A, B, E, 12, "a") + angle_arc(A, E, D, 15, "a")
-      + angle_arc(C, D, F, 12, "a") + angle_arc(C, F, B, 15, "a")
+      + angle_arc(C, D, F, 12, "a") + angle_arc(C, D, F, 15, "a") + angle_arc(C, F, B, 16, "a") + angle_arc(C, F, B, 19, "a")
       + L(A, B, C, D) + lab(E, "E", dy=14) + lab(F, "F", dy=-5))
 
 def cell(n, f, cap, a):
@@ -64,9 +64,9 @@ T = ('<table style="margin-top:4px"><tr><th></th><th class="c">それぞれの�
 body = "".join([
 q(1, "□ABCD で、%s、%s の値を求めなさい。" % (X, Y), "",
   '<div class="row c3">%s%s%s</div>'
-  % (cell(1, ("0 0 170 104", f1), "", "%s＝%s°　%s＝%s°" % (X, z("65"), Y, z("115"))),
-     cell(2, ("0 0 170 104", f2), "O は対角線の交点。AC＝12cm", "%s＝%s cm　%s＝%s cm" % (X, z("6"), Y, z("7"))),
-     cell(3, ("0 0 170 104", f3), "∠BAC＝40°、∠ACB＝30°", "%s＝%s°　%s＝%s°" % (X, z("110"), Y, z("30"))))),
+  % (cell(1, ("0 -6 170 118", f1), "", "%s＝%s°　%s＝%s°" % (X, z("65"), Y, z("115"))),
+     cell(2, ("0 -6 170 118", f2), "O は対角線の交点。AC＝12cm", "%s＝%s cm　%s＝%s cm" % (X, z("6"), Y, z("7"))),
+     cell(3, ("0 -6 170 118", f3), "∠BAC＝40°、∠ACB＝30°", "%s＝%s°　%s＝%s°" % (X, z("110"), Y, z("30"))))),
 
 '<div class="row c2" style="align-items:start">',
 q(2, "対角線の性質。いつでも成り立つものに○、そうでないものに×。", "", T),
@@ -103,7 +103,7 @@ memo("<b>つまずき</b>　1(3) の ∠D は ∠B と等しい（180°−40°�
 
 SHEET = dict(
     kind="宿題②", title="2節 四角形",
-    lead="範囲　第7〜10時　　使うカード　⑯〜㉒ と 4章・1節のカード　　"
+    lead="範囲　第7〜10時　　使うカード　⑯〜㉒ と 4章の ①〜⑩・1節の ⑪〜⑮　　"
          "<b>わからないところは、次の時間に誰かに聞く。</b>",
     body=body,
     footer="中学2年 数学　5章 三角形・四角形　宿題プリント② 2節／A4",

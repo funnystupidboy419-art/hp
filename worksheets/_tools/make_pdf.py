@@ -18,6 +18,10 @@ _WRAP = """<!doctype html>
 </body></html>"""
 
 _TEACHER = '<script>document.body.classList.add("teacher");</script>'
+# 生徒用は答えの文字そのものを消す。color:transparent だけだと PDF に文字が残り、
+# タブレットで配るとコピーで読めてしまう。.ans や .ft は display:none なので PDF に出ない。
+_STUDENT = ('<script>document.querySelectorAll(".z").forEach(function(e){e.textContent="";});'
+            '</script>')
 
 # 印刷時はネットワークを使わない（Google Fonts を待って止まるため）。
 # この環境にある日本語フォントは IPAGothic だけなので、明朝も同じ族に落とす。
@@ -32,7 +36,7 @@ def _render(src_html, out_pdf, teacher, workdir):
     tmp = os.path.join(workdir, os.path.basename(src_html))
     with io.open(tmp, "w", encoding="utf-8") as f:
         f.write(_WRAP.replace("{body}", body)
-                     .replace("{teacher}", _TEACHER if teacher else ""))
+                     .replace("{teacher}", _TEACHER if teacher else _STUDENT))
     prof = tempfile.mkdtemp(dir=workdir)
     cmd = [CHROME, "--disable-gpu", "--no-sandbox",
            "--no-pdf-header-footer", "--virtual-time-budget=3000",

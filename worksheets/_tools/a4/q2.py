@@ -20,8 +20,8 @@ check_angle(E, A, C, 125)
 P1 = {"A": A, "B": B, "C": C, "D": D, "E": E}
 f1 = (poly(A, D, C, B) + seg(A, E) + angle_arc(B, A, C, r=12) + angle_label(B, A, C, "70°", r=24)
       + angle_arc(A, B, E, r=12, cls="a") + angle_arc(A, E, D, r=15, cls="a")
-      + angle_arc(E, A, C, r=10) + angle_label(E, A, C, "<tspan font-style='italic'>y</tspan>", r=20)
-      + angle_arc(D, A, C, r=10) + angle_label(D, A, C, "<tspan font-style='italic'>x</tspan>", r=20)
+      + angle_arc(E, A, C, r=13) + angle_label(E, A, C, "<tspan font-style='italic'>y</tspan>", r=25)
+      + angle_arc(D, A, C, r=13) + angle_label(D, A, C, "<tspan font-style='italic'>x</tspan>", r=25)
       + lab(pt_on(A, B, .5), "6cm", dx=-16, cls="ts") + lab(pt_on(A, D, .5), "10cm", dy=-5, cls="ts")
       + labels(P1, ["A", "B", "C", "D"], d=9) + lab(E, "E", dy=14))
 
@@ -44,12 +44,12 @@ q(1, "□ABCD で、∠A の二等分線と辺 BC の交点を E とする。AB�
      "次の値を求めなさい。", "各2点【知】",
   '<div class="row c2" style="grid-template-columns:62mm 1fr; align-items:center">%s'
   '<ol class="sub"><li>∠%s＝%s°</li><li>EC の長さ　%s cm</li><li>∠%s＝%s°</li></ol></div>'
-  % (fig("0 0 186 118", f1), X, z("70"), z("4"), Y, z("125"))),
+  % (fig("0 -6 186 132", f1), X, z("70"), z("4"), Y, z("125"))),
 
 '<div class="row c2" style="grid-template-columns:1.1fr 1fr; align-items:start">',
 q(2, "AD∥BC の四角形 ABCD に、次の条件を加える。<b>必ず平行四辺形になる</b>ものを"
      "すべて選びなさい。", "4点【知】",
-  fig("0 0 152 98", f2, "AD∥BC", 46)
+  fig("0 -2 152 104", f2, "AD∥BC（図は条件を加える前）", 46)
   + '<p>㋐ AD＝BC　　㋑ AB＝DC　　㋒ ∠A＝∠C　　㋓ ∠A＝∠B</p><p>答　%s</p>' % z("㋐、㋒", "w")),
 q(3, "□ABCD に次の条件を加えると、どんな四角形になりますか。", "各1点【知】",
   '<ol class="sub"><li>AC＝BD　　%s</li><li>AC⊥BD　　%s</li></ol>'
@@ -63,10 +63,10 @@ q(4, "□ABCD の対角線 BD 上に、<b>BE＝DF</b> となる点 E、F をと�
   '<div class="row c2" style="grid-template-columns:58mm 1fr; align-items:start">%s'
   '<div class="bz" style="padding:5px 8px; line-height:1.95">'
   '△ABE と △CDF において<br>'
-  '仮定より　BE＝DF　……①<br>'
-  '（ア）%s から　AB＝CD　……②<br>'
-  'AB∥DC で、（イ）%s は等しいから　∠ABE＝（ウ）%s　……③<br>'
-  '①②③より、（エ）%s がそれぞれ等しいから　△ABE≡△CDF<br>'
+  '仮定より　BE＝DF　……(a)<br>'
+  '（ア）%s から　AB＝CD　……(b)<br>'
+  'AB∥DC で、（イ）%s は等しいから　∠ABE＝（ウ）%s　……(c)<br>'
+  '(a)(b)(c)より、（エ）%s がそれぞれ等しいから　△ABE≡△CDF<br>'
   '合同な図形では対応する辺は等しいから　AE＝CF</div></div>'
   % (fig("0 0 180 116", f3, "BE＝DF（2本線）"),
      z("平行四辺形の対辺は等しい", "ww"), z("錯角", "w"), z("∠CDF", "w"),
@@ -75,12 +75,12 @@ q(4, "□ABCD の対角線 BD 上に、<b>BE＝DF</b> となる点 E、F をと�
 memo("<b>本番との対応</b>　1→大問2・3（角と長さ）、2→大問4（条件をすべて選ぶ）、4→大問6（証明の穴うめ）。<br>"
      "2 の㋑は<b>等脚台形</b>が反例、㋓は ∠A＋∠B＝180° から両方 90° になるだけで台形のまま。"
      "㋒は ∠B＝180°−∠A＝180°−∠C＝∠D となり、2組の対角が等しい（根拠⑳）。<br>"
-     "4 のアは「⑯」と番号だけ書いたら1点。<b>内容をことばで</b>書くのがこの単元の約束。"),
+     "4 のアは「⑯」と番号だけ書いたら1点。ウは ∠CDB も正解。2 はすべて選べて4点、1つ過不足で2点。"),
 ])
 
 SHEET = dict(
     kind="小テスト②", title="2節 四角形", right=NAME + score(20),
-    lead="範囲　第7〜10時（平行四辺形の性質・なるための条件・特別な四角形）　時間　10分　"
+    lead="範囲　第7〜10時（平行四辺形の性質・なるための条件・特別な四角形）　時間　10分　□ABCD は平行四辺形 ABCD のこと　"
          "<b>知識・技能 12点／思考・判断・表現 8点</b>",
     body=body,
     footer="中学2年 数学　5章 三角形・四角形　小テスト② 2節／A4",
