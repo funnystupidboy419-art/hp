@@ -113,11 +113,32 @@ HTML = """<title>根拠カード 5章</title>
 <script>document.getElementById('print').addEventListener('click',function(){window.print();});</script>
 """
 
-def build(out_path):
+# A4縦1枚: 3列×5段（13枚＋白2枚）。あとに書いた @page と印刷用の指定が A3 の指定を上書きする。
+CSS_A4 = """
+@page{size:A4 portrait; margin:8mm}
+@media print{
+  body{font-size:9pt}
+  h1{font-size:12pt}
+  .sub{font-size:8pt; margin-top:1mm; line-height:1.4}
+  .deck{grid-template-columns:repeat(3,1fr); gap:3mm; margin-top:3mm}
+  .card{min-height:47.5mm; padding:2.6mm 3mm 2mm}
+  .card .no{font-size:17pt}
+  .card .txt{font-size:9.6pt; line-height:1.45; margin-top:2mm}
+  .card .foot{font-size:7pt; margin-top:1.5mm; padding-top:1mm}
+  .card .mirror{font-size:11pt; bottom:6mm}
+  .card.blank .txt+.txt{margin-top:2.5mm}
+  .note{margin-top:2.5mm; font-size:7.8pt; line-height:1.4}
+}
+"""
+
+def build(out_path, a4=False):
     deck = "".join(card(*c) for c in CARDS) + "".join(blank(i) for i in range(BLANKS))
-    html = HTML % (CSS, deck)
+    html = HTML % (CSS + (CSS_A4 if a4 else ""), deck)
+    if a4:
+        html = html.replace("印刷する（A3・横）", "印刷する（A4・縦）")
     io.open(out_path, "w", encoding="utf-8").write(html)
     return len(html.encode("utf-8"))
 
 if __name__ == "__main__":
-    print(build(sys.argv[1]), "bytes /", len(CARDS), "枚 +", BLANKS, "枚（白）")
+    # 使い方: cards.py <出力.html> [--a4]
+    print(build(sys.argv[1], a4="--a4" in sys.argv[2:]), "bytes /", len(CARDS), "枚 +", BLANKS, "枚（白）")
